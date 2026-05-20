@@ -18,6 +18,7 @@ import { LanguageSwitcher } from './language-switcher';
 import { ThemeToggle } from './theme-toggle';
 import { MobileSidebar } from './mobile-sidebar';
 import { NotificationBell } from './notification-bell';
+import { CommandPalette } from './command-palette';
 import { initials } from '@/lib/utils';
 
 export function Topbar() {
@@ -30,10 +31,11 @@ export function Topbar() {
       <div className="flex items-center gap-2 md:hidden">
         {user ? <MobileSidebar /> : null}
         <Link href="/channels" className="text-sm font-semibold tracking-tight">
-          MentorHub
+          Stubiz
         </Link>
       </div>
       <div className="ml-auto flex items-center gap-1">
+        {user ? <CommandPalette /> : null}
         {user ? <NotificationBell /> : null}
         <LanguageSwitcher />
         <ThemeToggle />

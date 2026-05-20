@@ -5,7 +5,7 @@ import { Providers } from '@/components/providers';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'MentorHub & StuBiz',
+  title: 'Stubiz',
   description: 'Kết nối sinh viên kỹ thuật với cố vấn thực chiến và cơ hội việc làm',
 };
 

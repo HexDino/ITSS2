@@ -1,9 +1,38 @@
 {
   "app": {
-    "name": "MentorHub & StuBiz",
+    "name": "Stubiz",
     "tagline": "技術系学生と実務メンター・就職機会をつなぐプラットフォーム"
   },
+  "search": {
+    "open": "検索を開く",
+    "title": "グローバル検索",
+    "placeholder": "チャンネル・メンター・求人・企業を検索...",
+    "hint": "2文字以上で検索してください",
+    "empty": "一致する結果がありません",
+    "groups": {
+      "channels": "チャンネル",
+      "mentors": "メンター",
+      "jobs": "求人",
+      "companies": "企業"
+    }
+  },
+  "home": {
+    "badge": "ダッシュボード",
+    "title": "おかえりなさい",
+    "greeting": "{name} さん、今日は何を学びましょうか？",
+    "subtitle": "質問をし、メンターと出会い、実践的なチャンスを見つける場所。",
+    "cta": {
+      "askQuestion": "質問する",
+      "findJob": "求人を見る"
+    },
+    "sections": {
+      "hotChannels": "人気チャンネル",
+      "topMentors": "トップメンター",
+      "latestJobs": "新着求人"
+    }
+  },
   "nav": {
+    "home": "ホーム",
     "channels": "チャンネル",
     "mentors": "メンター",
     "companies": "企業",
@@ -62,6 +91,7 @@
     "categoryAll": "すべてのカテゴリ",
     "empty": "該当するチャンネルが見つかりません。",
     "threads": "スレッド",
+    "countLabel": "{count} チャンネル",
     "createThread": "新しい質問を投稿",
     "proposeChannel": "チャンネル提案",
     "proposeHint": "新しいチャンネルは管理者の承認後に公開されます。",
@@ -71,7 +101,17 @@
     "tagsLabel": "タグ(カンマ区切り)",
     "createSuccess": "チャンネルを作成しました。",
     "createPending": "提案を送信しました。承認をお待ちください。",
-    "createError": "作成に失敗しました"
+    "createError": "作成に失敗しました",
+    "categories": {
+      "FRONTEND": "フロントエンド",
+      "BACKEND": "バックエンド",
+      "DEVOPS": "DevOps",
+      "MOBILE": "モバイル",
+      "DATA_AI": "Data / AI",
+      "PROCESS_GIT": "Git ・ プロセス",
+      "PROCESS_SCRUM": "Scrum ・ Agile",
+      "CAREER": "キャリア"
+    }
   },
   "threads": {
     "newTitle": "新しい質問・トピックを投稿",
@@ -96,12 +136,14 @@
   "mentors": {
     "title": "メンター",
     "subtitle": "実務経験豊富な先輩エンジニアたち。",
+    "searchPlaceholder": "名前・役職・所属・スキルで検索...",
     "experience": "経験{years}年",
     "company": "所属",
     "position": "役職",
     "expertise": "専門スキル",
     "bio": "自己紹介",
     "verified": "認証済み",
+    "empty": "該当するメンターが見つかりません。",
     "chatNow": "メッセージ",
     "notOpen": "現在チャット受付停止中"
   },
@@ -112,7 +154,14 @@
     "industry": "業界",
     "location": "所在地",
     "size": "規模",
+    "sizes": {
+      "STARTUP": "スタートアップ",
+      "SMALL": "50人未満",
+      "MEDIUM": "50〜500人",
+      "LARGE": "500人以上"
+    },
     "openJobs": "募集中{count}件",
+    "empty": "該当する企業が見つかりません。",
     "viewJobs": "求人を見る"
   },
   "jobs": {

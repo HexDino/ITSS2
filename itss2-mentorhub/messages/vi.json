@@ -1,9 +1,38 @@
 {
   "app": {
-    "name": "MentorHub & StuBiz",
+    "name": "Stubiz",
     "tagline": "Kết nối sinh viên kỹ thuật với cố vấn thực chiến và cơ hội việc làm"
   },
+  "search": {
+    "open": "Trình duyệt tìm kiếm",
+    "title": "Tìm kiếm toàn cục",
+    "placeholder": "Tìm kênh, cố vấn, việc làm, doanh nghiệp...",
+    "hint": "Gõ ít nhất 2 ký tự để tìm kiếm",
+    "empty": "Không tìm thấy kết quả phù hợp",
+    "groups": {
+      "channels": "Kênh",
+      "mentors": "Cố vấn",
+      "jobs": "Việc làm",
+      "companies": "Doanh nghiệp"
+    }
+  },
+  "home": {
+    "badge": "Bảng điều khiển",
+    "title": "Chào mừng trở lại",
+    "greeting": "Chào {name}, hôm nay học gì nào?",
+    "subtitle": "Một nơi để đặt câu hỏi, kết nối cố vấn và tìm cơ hội thực chiến.",
+    "cta": {
+      "askQuestion": "Đặt câu hỏi",
+      "findJob": "Tìm việc"
+    },
+    "sections": {
+      "hotChannels": "Kênh nổi bật",
+      "topMentors": "Cố vấn nổi bật",
+      "latestJobs": "Việc làm mới"
+    }
+  },
   "nav": {
+    "home": "Trang chủ",
     "channels": "Kênh thảo luận",
     "mentors": "Cố vấn",
     "companies": "Doanh nghiệp",
@@ -61,7 +90,8 @@
     "searchPlaceholder": "Tìm theo từ khóa, thẻ công nghệ hoặc tên công ty...",
     "categoryAll": "Tất cả danh mục",
     "empty": "Không tìm thấy kênh phù hợp.",
-    "threads": "thớt",
+    "threads": "chủ đề",
+    "countLabel": "{count} kênh thảo luận",
     "createThread": "Đăng câu hỏi mới",
     "proposeChannel": "Đề xuất kênh",
     "proposeHint": "Kênh mới cần được quản trị viên phê duyệt trước khi hiển thị công khai.",
@@ -71,7 +101,17 @@
     "tagsLabel": "Thẻ (cách nhau bằng dấu phẩy)",
     "createSuccess": "Đã tạo kênh.",
     "createPending": "Đã gửi đề xuất kênh. Chờ quản trị viên duyệt.",
-    "createError": "Không thể tạo kênh"
+    "createError": "Không thể tạo kênh",
+    "categories": {
+      "FRONTEND": "Frontend",
+      "BACKEND": "Backend",
+      "DEVOPS": "DevOps",
+      "MOBILE": "Mobile",
+      "DATA_AI": "Data / AI",
+      "PROCESS_GIT": "Git & Quy trình",
+      "PROCESS_SCRUM": "Scrum & Agile",
+      "CAREER": "Nghề nghiệp"
+    }
   },
   "threads": {
     "newTitle": "Đăng câu hỏi / chủ đề mới",
@@ -96,12 +136,14 @@
   "mentors": {
     "title": "Cố vấn",
     "subtitle": "Tiền bối thực chiến từ các doanh nghiệp công nghệ.",
+    "searchPlaceholder": "Tìm theo tên, vị trí, công ty hoặc kỹ năng...",
     "experience": "{years} năm kinh nghiệm",
     "company": "Công ty",
     "position": "Vị trí",
     "expertise": "Kỹ năng chuyên sâu",
     "bio": "Giới thiệu",
     "verified": "Đã xác thực",
+    "empty": "Không tìm thấy cố vấn phù hợp.",
     "chatNow": "Nhắn tin",
     "notOpen": "Mentor hiện không mở chat"
   },
@@ -112,7 +154,14 @@
     "industry": "Lĩnh vực",
     "location": "Địa điểm",
     "size": "Quy mô",
+    "sizes": {
+      "STARTUP": "Startup",
+      "SMALL": "Dưới 50 người",
+      "MEDIUM": "50 – 500 người",
+      "LARGE": "Trên 500 người"
+    },
     "openJobs": "{count} vị trí đang tuyển",
+    "empty": "Không tìm thấy doanh nghiệp phù hợp.",
     "viewJobs": "Xem việc làm"
   },
   "jobs": {

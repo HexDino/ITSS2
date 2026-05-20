@@ -13,11 +13,13 @@ import {
   UserCircle,
   ShieldCheck,
   BriefcaseBusiness,
+  Home,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useSession } from 'next-auth/react';
 
 const items = [
+  { href: '/home', key: 'home', icon: Home },
   { href: '/channels', key: 'channels', icon: MessagesSquare },
   { href: '/mentors', key: 'mentors', icon: Users },
   { href: '/companies', key: 'companies', icon: Building2 },
@@ -39,10 +41,19 @@ export function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
 
   return (
     <>
-      <Link href="/channels" className="px-3 py-2 mb-2 block" onClick={onNavigate}>
-        <div className="text-base font-semibold tracking-tight">MentorHub</div>
-        <div className="text-xs text-muted-foreground">& StuBiz</div>
+      <Link
+        href="/channels"
+        className="mb-1 block px-3 pb-4 pt-1"
+        onClick={onNavigate}
+      >
+        <div className="font-serif text-2xl font-bold tracking-tight text-primary">
+          Stubiz
+        </div>
+        <div className="mt-0.5 text-[11px] uppercase tracking-widest text-muted-foreground">
+          Mentor &middot; Career
+        </div>
       </Link>
+      <div className="mx-3 mb-3 h-px bg-border" />
       <nav className="flex flex-col gap-0.5">
         {visible.map((item) => {
           const Icon = item.icon;

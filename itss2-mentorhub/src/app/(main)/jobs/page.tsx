@@ -84,10 +84,10 @@ export default async function JobsPage({ searchParams }: PageProps) {
                 </p>
               </CardHeader>
               <CardContent className="flex items-center justify-between text-xs text-muted-foreground">
-                <div className="flex flex-wrap gap-1">
+                <div className="flex flex-wrap gap-1.5">
                   {j.tags.slice(0, 5).map((tag) => (
-                    <Badge key={tag} variant="outline" className="text-xs">
-                      {tag}
+                    <Badge key={tag} variant="tag" className="text-xs">
+                      #{tag}
                     </Badge>
                   ))}
                 </div>
