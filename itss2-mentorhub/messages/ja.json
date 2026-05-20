@@ -1,0 +1,163 @@
+{
+  "app": {
+    "name": "MentorHub & StuBiz",
+    "tagline": "技術系学生と実務メンター・就職機会をつなぐプラットフォーム"
+  },
+  "nav": {
+    "channels": "チャンネル",
+    "mentors": "メンター",
+    "companies": "企業",
+    "jobs": "求人",
+    "applications": "応募状況",
+    "employer": "採用担当",
+    "chat": "メッセージ",
+    "profile": "プロフィール",
+    "admin": "管理",
+    "logout": "ログアウト",
+    "login": "ログイン",
+    "register": "新規登録"
+  },
+  "common": {
+    "search": "検索",
+    "filter": "絞り込み",
+    "all": "すべて",
+    "cancel": "キャンセル",
+    "submit": "送信",
+    "save": "保存",
+    "delete": "削除",
+    "edit": "編集",
+    "loading": "読み込み中...",
+    "noData": "データがありません",
+    "back": "戻る",
+    "next": "次へ",
+    "anonymousUser": "匿名ユーザー",
+    "post": "投稿",
+    "language": "言語",
+    "theme": "テーマ",
+    "send": "送信"
+  },
+  "auth": {
+    "loginTitle": "ログイン",
+    "loginSubtitle": "先輩との繋がりとキャリアの機会へ。",
+    "registerTitle": "アカウント作成",
+    "registerSubtitle": "ロールを選択して開始してください。",
+    "email": "メールアドレス",
+    "password": "パスワード",
+    "name": "氏名",
+    "role": "ロール",
+    "roleStudent": "学生",
+    "roleMentor": "メンター",
+    "roleEmployer": "企業",
+    "noAccount": "アカウントをお持ちでない方",
+    "hasAccount": "すでにアカウントをお持ちの方",
+    "submitLogin": "ログイン",
+    "submitRegister": "登録する",
+    "invalidCredentials": "メールアドレスまたはパスワードが正しくありません。",
+    "registerSuccess": "登録が完了しました。ログインしてください。"
+  },
+  "channels": {
+    "title": "技術ディスカッションチャンネル",
+    "subtitle": "適切な場所で、適切な質問を。",
+    "searchPlaceholder": "キーワード・技術タグ・会社名で検索...",
+    "categoryAll": "すべてのカテゴリ",
+    "empty": "該当するチャンネルが見つかりません。",
+    "threads": "スレッド",
+    "createThread": "新しい質問を投稿",
+    "proposeChannel": "チャンネル提案",
+    "proposeHint": "新しいチャンネルは管理者の承認後に公開されます。",
+    "nameLabel": "チャンネル名",
+    "descLabel": "説明",
+    "categoryLabel": "カテゴリ",
+    "tagsLabel": "タグ(カンマ区切り)",
+    "createSuccess": "チャンネルを作成しました。",
+    "createPending": "提案を送信しました。承認をお待ちください。",
+    "createError": "作成に失敗しました"
+  },
+  "threads": {
+    "newTitle": "新しい質問・トピックを投稿",
+    "titleLabel": "タイトル",
+    "titlePlaceholder": "問題を一文で要約...",
+    "contentLabel": "本文",
+    "contentPlaceholder": "状況・エラー・試したコードを詳細に...",
+    "tagsLabel": "タグ(カンマ区切り)",
+    "answersCount": "{count}件の回答",
+    "writeAnswer": "回答を書く",
+    "answerDialogTitle": "回答を書く",
+    "answerPlaceholder": "経験・コード・アプローチを共有...",
+    "anonymousLabel": "匿名で投稿",
+    "anonymousHint": "オンにすると名前とアバターが非表示になります。他者には『匿名ユーザー』としてのみ表示されます。",
+    "publicHint": "実名で投稿して信頼スコアを積み上げましょう。",
+    "charCount": "{count}/40000文字",
+    "postSuccess": "回答を投稿しました。",
+    "postError": "エラーが発生しました。再度お試しください。",
+    "validationEmpty": "本文は必須です。",
+    "validationTooLong": "本文が40,000文字を超えています。"
+  },
+  "mentors": {
+    "title": "メンター",
+    "subtitle": "実務経験豊富な先輩エンジニアたち。",
+    "experience": "経験{years}年",
+    "company": "所属",
+    "position": "役職",
+    "expertise": "専門スキル",
+    "bio": "自己紹介",
+    "verified": "認証済み",
+    "chatNow": "メッセージ",
+    "notOpen": "現在チャット受付停止中"
+  },
+  "companies": {
+    "title": "企業",
+    "subtitle": "キャリアを築きたい場所を探す。",
+    "searchPlaceholder": "社名・業界・所在地で検索...",
+    "industry": "業界",
+    "location": "所在地",
+    "size": "規模",
+    "openJobs": "募集中{count}件",
+    "viewJobs": "求人を見る"
+  },
+  "jobs": {
+    "title": "求人・インターン",
+    "subtitle": "実戦経験を積める機会。",
+    "type": "種別",
+    "internship": "インターン",
+    "junior": "ジュニア",
+    "applyNow": "応募する",
+    "applied": "応募済み",
+    "deadline": "締切",
+    "requirements": "応募条件",
+    "benefits": "待遇",
+    "description": "職務内容"
+  },
+  "applications": {
+    "title": "応募状況",
+    "status": {
+      "RECEIVED": "受付完了",
+      "REVIEWING": "選考中",
+      "INTERVIEW": "面接予定",
+      "ACCEPTED": "合格",
+      "REJECTED": "不採用"
+    }
+  },
+  "profile": {
+    "title": "プロフィール",
+    "uploadCV": "CVをアップロード (PDF)",
+    "skills": "スキル",
+    "university": "大学",
+    "major": "専攻",
+    "year": "学年",
+    "bio": "自己紹介"
+  },
+  "chat": {
+    "title": "メッセージ",
+    "empty": "まだ会話がありません。",
+    "typeMessage": "メッセージを入力..."
+  },
+  "admin": {
+    "title": "システム管理",
+    "pendingMentors": "メンター承認待ち",
+    "pendingChannels": "チャンネル承認待ち",
+    "reports": "通報一覧",
+    "approve": "承認",
+    "reject": "却下"
+  }
+}

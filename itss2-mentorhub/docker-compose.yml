@@ -1,0 +1,52 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: mentorhub-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: mentorhub
+      POSTGRES_PASSWORD: mentorhub_dev_pw
+      POSTGRES_DB: mentorhub
+    ports:
+      - "5433:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mentorhub -d mentorhub"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mentorhub-app
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://mentorhub:mentorhub_dev_pw@db:5432/mentorhub?schema=public
+      AUTH_SECRET: ${AUTH_SECRET:-dev-secret-please-change-in-production-min-32-chars-xx}
+      AUTH_TRUST_HOST: "true"
+      NEXTAUTH_URL: ${NEXTAUTH_URL:-http://localhost:3000}
+      NEXT_PUBLIC_APP_NAME: "MentorHub & StuBiz"
+      RUN_SEED: ${RUN_SEED:-true}
+    ports:
+      - "3000:3000"
+    volumes:
+      - uploads:/app/public/uploads
+
+  adminer:
+    image: adminer:4
+    container_name: mentorhub-adminer
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+
+volumes:
+  db_data:
+  uploads:

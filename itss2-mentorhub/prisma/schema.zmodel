@@ -1,0 +1,454 @@
+// ============================================================================
+// ZenStack schema — MentorHub & StuBiz
+// Source of truth for: Prisma schema, access policies, TanStack Query hooks
+// ============================================================================
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+plugin hooks {
+  provider = '@zenstackhq/tanstack-query'
+  target   = 'react'
+  version  = 'v5'
+  output   = 'src/lib/hooks'
+}
+
+// ============================================================================
+// ENUMS
+// ============================================================================
+enum Role {
+  STUDENT
+  MENTOR
+  EMPLOYER
+  ADMIN
+}
+
+enum ChannelCategory {
+  FRONTEND
+  BACKEND
+  DEVOPS
+  MOBILE
+  DATA_AI
+  PROCESS_GIT
+  PROCESS_SCRUM
+  CAREER
+  OTHER
+}
+
+enum JobType {
+  INTERNSHIP
+  JUNIOR
+  PARTTIME
+  FULLTIME
+}
+
+enum JobStatus {
+  OPEN
+  CLOSED
+  DRAFT
+}
+
+enum ApplicationStatus {
+  RECEIVED
+  REVIEWING
+  INTERVIEW
+  ACCEPTED
+  REJECTED
+}
+
+enum CompanySize {
+  STARTUP
+  SMALL
+  MEDIUM
+  LARGE
+}
+
+enum ReportStatus {
+  PENDING
+  RESOLVED
+  DISMISSED
+}
+
+// ============================================================================
+// USER + AUTH
+// ============================================================================
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique @email @length(5, 200)
+  emailVerified DateTime?
+  name          String    @length(1, 100)
+  image         String?   @url
+  password      String?   @password @omit
+  role          Role      @default(STUDENT)
+  verified      Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  studentProfile  StudentProfile?
+  mentorProfile   MentorProfile?
+  employerProfile EmployerProfile?
+
+  accounts        Account[]
+  sessions        Session[]
+  threads         Thread[]      @relation("ThreadAuthor")
+  answers         Answer[]      @relation("AnswerAuthor")
+  chatRoomsA      ChatRoom[]    @relation("ChatUserA")
+  chatRoomsB      ChatRoom[]    @relation("ChatUserB")
+  messages        Message[]
+  applications    Application[]
+  reportsMade     Report[]      @relation("ReportReporter")
+  channelsCreated Channel[]     @relation("ChannelCreator")
+  votes           AnswerVote[]
+  notifications   Notification[] @relation("NotificationRecipient")
+
+  @@allow('read', auth() != null)
+  @@allow('create', auth() == null || auth().role == 'ADMIN')
+  @@allow('update', auth() == this || auth().role == 'ADMIN')
+  @@allow('delete', auth().role == 'ADMIN')
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@allow('all', auth() == user || auth().role == 'ADMIN')
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@allow('all', auth() == user || auth().role == 'ADMIN')
+}
+
+// ============================================================================
+// PROFILES
+// ============================================================================
+model StudentProfile {
+  id           String   @id @default(cuid())
+  userId       String   @unique
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bio          String?  @length(0, 2000)
+  university   String?  @length(0, 200)
+  major        String?  @length(0, 200)
+  yearOfStudy  Int?     @gte(1) @lte(8)
+  skills       String[]
+  cvUrl        String?  @url
+  portfolio    String?  @url
+  github       String?
+  linkedin     String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  applications Application[]
+
+  @@allow('read', auth() != null)
+  @@allow('create,update', auth() == user)
+  @@allow('delete', auth() == user || auth().role == 'ADMIN')
+}
+
+model MentorProfile {
+  id                String   @id @default(cuid())
+  userId            String   @unique
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  company           String   @length(1, 200)
+  position          String   @length(1, 200)
+  yearsOfExperience Int      @gte(0) @lte(60)
+  expertise         String[]
+  bio               String?  @length(0, 4000)
+  verified          Boolean  @default(false)
+  openToChat        Boolean  @default(true)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@allow('read', verified == true || auth() == user || auth().role == 'ADMIN')
+  @@allow('create,update', auth() == user)
+  @@allow('delete', auth() == user || auth().role == 'ADMIN')
+}
+
+model EmployerProfile {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  companyId String?
+  company   Company? @relation(fields: [companyId], references: [id])
+  title     String?  @length(0, 200)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@allow('read', auth() != null)
+  @@allow('create,update', auth() == user)
+  @@allow('delete', auth() == user || auth().role == 'ADMIN')
+}
+
+// ============================================================================
+// COMPANY (StuBiz)
+// ============================================================================
+model Company {
+  id          String      @id @default(cuid())
+  name        String      @unique @length(2, 200)
+  slug        String      @unique
+  logo        String?     @url
+  website     String?     @url
+  description String?     @length(0, 5000)
+  industry    String?     @length(0, 200)
+  location    String?     @length(0, 200)
+  size        CompanySize @default(SMALL)
+  verified    Boolean     @default(false)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  employers EmployerProfile[]
+  jobs      Job[]
+
+  @@allow('read', auth() != null)
+  @@allow('create', auth().role == 'EMPLOYER' || auth().role == 'ADMIN')
+  @@allow('update', auth().role == 'ADMIN' || (auth().role == 'EMPLOYER' && employers?[user == auth()]))
+  @@allow('delete', auth().role == 'ADMIN')
+}
+
+// ============================================================================
+// MENTORHUB
+// ============================================================================
+model Channel {
+  id          String          @id @default(cuid())
+  name        String          @unique @length(2, 100)
+  slug        String          @unique
+  description String?         @length(0, 1000)
+  category    ChannelCategory @default(OTHER)
+  tags        String[]
+  iconKey     String?
+  approved    Boolean         @default(false)
+  createdById String?
+  createdBy   User?           @relation("ChannelCreator", fields: [createdById], references: [id])
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  threads Thread[]
+
+  @@allow('read', approved == true || auth().role == 'ADMIN' || auth() == createdBy)
+  @@allow('create', auth() != null)
+  @@allow('update,delete', auth().role == 'ADMIN' || auth() == createdBy)
+}
+
+model Thread {
+  id          String   @id @default(cuid())
+  title       String   @length(5, 300)
+  content     String   @length(1, 40000)
+  tags        String[]
+  channelId   String
+  channel     Channel  @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  authorId    String
+  author      User     @relation("ThreadAuthor", fields: [authorId], references: [id])
+  isAnonymous Boolean  @default(false)
+  pinned      Boolean  @default(false)
+  closed      Boolean  @default(false)
+  viewCount   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  answers Answer[]
+
+  @@index([channelId])
+  @@index([createdAt])
+
+  @@allow('read', auth() != null)
+  @@allow('create', auth() != null)
+  @@allow('update', auth() == author || auth().role == 'ADMIN')
+  @@allow('delete', auth() == author || auth().role == 'ADMIN')
+}
+
+/// Câu trả lời — model trọng tâm cho acceptance criteria.
+/// content: HTML từ TipTap, max 40,000 ký tự (gồm cả markup).
+/// isAnonymous map trực tiếp đến Toggle switch ở UI.
+model Answer {
+  id          String   @id @default(cuid())
+  content     String   @length(1, 40000)
+  threadId    String
+  thread      Thread   @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  authorId    String
+  author      User     @relation("AnswerAuthor", fields: [authorId], references: [id])
+  isAnonymous Boolean  @default(false)
+  upvotes     Int      @default(0)
+  accepted    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  votes AnswerVote[]
+
+  @@index([threadId])
+  @@index([authorId])
+
+  @@allow('read', auth() != null)
+  @@allow('create', auth() != null && author == auth())
+  @@allow('update', auth() == author || auth().role == 'ADMIN')
+  @@allow('delete', auth() == author || auth().role == 'ADMIN')
+}
+
+/// 1 vote per (user, answer) — duy nhất nguồn truth, `Answer.upvotes` được sync.
+model AnswerVote {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  answerId  String
+  answer    Answer   @relation(fields: [answerId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, answerId])
+  @@index([answerId])
+
+  @@allow('read', auth() != null)
+  @@allow('create,delete', auth() == user)
+}
+
+/// In-app notification (mentions, replies, accept, application status change).
+model Notification {
+  id          String   @id @default(cuid())
+  recipientId String
+  recipient   User     @relation("NotificationRecipient", fields: [recipientId], references: [id], onDelete: Cascade)
+  type        String   @length(1, 50)
+  title       String   @length(1, 200)
+  body        String?  @length(0, 1000)
+  link        String?  @length(0, 500)
+  read        Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  @@index([recipientId, read, createdAt])
+
+  @@allow('read,update', auth() == recipient || auth().role == 'ADMIN')
+  @@allow('delete', auth() == recipient || auth().role == 'ADMIN')
+  @@allow('create', auth() != null)
+}
+
+// ============================================================================
+// STUBIZ
+// ============================================================================
+model Job {
+  id           String    @id @default(cuid())
+  title        String    @length(3, 200)
+  description  String    @length(10, 20000)
+  requirements String?   @length(0, 10000)
+  benefits     String?   @length(0, 5000)
+  type         JobType   @default(INTERNSHIP)
+  status       JobStatus @default(OPEN)
+  location     String?   @length(0, 200)
+  salaryRange  String?   @length(0, 200)
+  tags         String[]
+  companyId    String
+  company      Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  postedById   String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  deadline     DateTime?
+
+  applications Application[]
+
+  @@index([companyId])
+  @@index([status])
+
+  @@allow('read', status == 'OPEN' || auth().role == 'ADMIN' || (auth().role == 'EMPLOYER' && company.employers?[user == auth()]))
+  @@allow('create,update,delete', auth().role == 'ADMIN' || (auth().role == 'EMPLOYER' && company.employers?[user == auth()]))
+}
+
+model Application {
+  id               String            @id @default(cuid())
+  jobId            String
+  job              Job               @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  studentId        String
+  student          User              @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  studentProfileId String?
+  studentProfile   StudentProfile?   @relation(fields: [studentProfileId], references: [id])
+  cvSnapshotUrl    String?           @url
+  coverLetter      String?           @length(0, 5000)
+  status           ApplicationStatus @default(RECEIVED)
+  note             String?           @length(0, 2000)
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+
+  @@unique([jobId, studentId])
+  @@index([studentId])
+
+  @@allow('read', auth() == student || auth().role == 'ADMIN' || (auth().role == 'EMPLOYER' && job.company.employers?[user == auth()]))
+  @@allow('create', auth() == student && auth().role == 'STUDENT')
+  @@allow('update', auth().role == 'ADMIN' || (auth().role == 'EMPLOYER' && job.company.employers?[user == auth()]))
+  @@allow('delete', auth() == student || auth().role == 'ADMIN')
+}
+
+// ============================================================================
+// CHAT
+// ============================================================================
+model ChatRoom {
+  id        String    @id @default(cuid())
+  userAId   String
+  userA     User      @relation("ChatUserA", fields: [userAId], references: [id])
+  userBId   String
+  userB     User      @relation("ChatUserB", fields: [userBId], references: [id])
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  messages  Message[]
+
+  @@unique([userAId, userBId])
+
+  @@allow('read,create', auth() == userA || auth() == userB)
+  @@allow('update', auth() == userA || auth() == userB)
+  @@allow('delete', auth().role == 'ADMIN')
+}
+
+model Message {
+  id        String    @id @default(cuid())
+  roomId    String
+  room      ChatRoom  @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  senderId  String
+  sender    User      @relation(fields: [senderId], references: [id])
+  content   String    @length(1, 5000)
+  readAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([roomId, createdAt])
+
+  @@allow('read', auth() == room.userA || auth() == room.userB)
+  @@allow('create', auth() == sender && (auth() == room.userA || auth() == room.userB))
+  @@allow('update', auth() == sender)
+  @@allow('delete', auth() == sender || auth().role == 'ADMIN')
+}
+
+// ============================================================================
+// MODERATION
+// ============================================================================
+model Report {
+  id         String       @id @default(cuid())
+  reporterId String
+  reporter   User         @relation("ReportReporter", fields: [reporterId], references: [id])
+  targetType String
+  targetId   String
+  reason     String       @length(1, 1000)
+  status     ReportStatus @default(PENDING)
+  resolution String?      @length(0, 2000)
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+
+  @@allow('read', auth() == reporter || auth().role == 'ADMIN')
+  @@allow('create', auth() != null && reporter == auth())
+  @@allow('update,delete', auth().role == 'ADMIN')
+}

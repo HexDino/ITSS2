@@ -1,0 +1,163 @@
+{
+  "app": {
+    "name": "MentorHub & StuBiz",
+    "tagline": "Kết nối sinh viên kỹ thuật với cố vấn thực chiến và cơ hội việc làm"
+  },
+  "nav": {
+    "channels": "Kênh thảo luận",
+    "mentors": "Cố vấn",
+    "companies": "Doanh nghiệp",
+    "jobs": "Việc làm",
+    "applications": "Đơn ứng tuyển",
+    "employer": "Nhà tuyển dụng",
+    "chat": "Tin nhắn",
+    "profile": "Hồ sơ",
+    "admin": "Quản trị",
+    "logout": "Đăng xuất",
+    "login": "Đăng nhập",
+    "register": "Đăng ký"
+  },
+  "common": {
+    "search": "Tìm kiếm",
+    "filter": "Lọc",
+    "all": "Tất cả",
+    "cancel": "Hủy bỏ",
+    "submit": "Gửi",
+    "save": "Lưu",
+    "delete": "Xóa",
+    "edit": "Chỉnh sửa",
+    "loading": "Đang tải...",
+    "noData": "Không có dữ liệu",
+    "back": "Quay lại",
+    "next": "Tiếp theo",
+    "anonymousUser": "Người dùng ẩn danh",
+    "post": "Đăng",
+    "language": "Ngôn ngữ",
+    "theme": "Giao diện",
+    "send": "Gửi"
+  },
+  "auth": {
+    "loginTitle": "Đăng nhập",
+    "loginSubtitle": "Tiếp tục hành trình kết nối tiền bối và cơ hội nghề nghiệp.",
+    "registerTitle": "Tạo tài khoản",
+    "registerSubtitle": "Chọn vai trò để bắt đầu.",
+    "email": "Email",
+    "password": "Mật khẩu",
+    "name": "Họ và tên",
+    "role": "Vai trò",
+    "roleStudent": "Sinh viên",
+    "roleMentor": "Cố vấn",
+    "roleEmployer": "Doanh nghiệp",
+    "noAccount": "Chưa có tài khoản?",
+    "hasAccount": "Đã có tài khoản?",
+    "submitLogin": "Đăng nhập",
+    "submitRegister": "Tạo tài khoản",
+    "invalidCredentials": "Email hoặc mật khẩu không chính xác.",
+    "registerSuccess": "Tạo tài khoản thành công. Vui lòng đăng nhập."
+  },
+  "channels": {
+    "title": "Kênh thảo luận công nghệ",
+    "subtitle": "Tìm đúng không gian, đặt đúng câu hỏi.",
+    "searchPlaceholder": "Tìm theo từ khóa, thẻ công nghệ hoặc tên công ty...",
+    "categoryAll": "Tất cả danh mục",
+    "empty": "Không tìm thấy kênh phù hợp.",
+    "threads": "thớt",
+    "createThread": "Đăng câu hỏi mới",
+    "proposeChannel": "Đề xuất kênh",
+    "proposeHint": "Kênh mới cần được quản trị viên phê duyệt trước khi hiển thị công khai.",
+    "nameLabel": "Tên kênh",
+    "descLabel": "Mô tả",
+    "categoryLabel": "Danh mục",
+    "tagsLabel": "Thẻ (cách nhau bằng dấu phẩy)",
+    "createSuccess": "Đã tạo kênh.",
+    "createPending": "Đã gửi đề xuất kênh. Chờ quản trị viên duyệt.",
+    "createError": "Không thể tạo kênh"
+  },
+  "threads": {
+    "newTitle": "Đăng câu hỏi / chủ đề mới",
+    "titleLabel": "Tiêu đề",
+    "titlePlaceholder": "Tóm tắt vấn đề trong một câu...",
+    "contentLabel": "Nội dung",
+    "contentPlaceholder": "Mô tả chi tiết bối cảnh, lỗi, code đã thử...",
+    "tagsLabel": "Thẻ (cách nhau bằng dấu phẩy)",
+    "answersCount": "{count} câu trả lời",
+    "writeAnswer": "Viết câu trả lời",
+    "answerDialogTitle": "Viết câu trả lời",
+    "answerPlaceholder": "Chia sẻ kinh nghiệm, đoạn code, hoặc hướng tiếp cận...",
+    "anonymousLabel": "Đăng ẩn danh",
+    "anonymousHint": "Bật để ẩn tên và ảnh đại diện. Người khác chỉ thấy 'Người dùng ẩn danh'.",
+    "publicHint": "Đăng công khai dưới tên thật để tích lũy uy tín.",
+    "charCount": "{count}/40000 ký tự",
+    "postSuccess": "Đã đăng câu trả lời.",
+    "postError": "Có lỗi xảy ra. Vui lòng thử lại.",
+    "validationEmpty": "Nội dung không được để trống.",
+    "validationTooLong": "Nội dung vượt quá 40.000 ký tự."
+  },
+  "mentors": {
+    "title": "Cố vấn",
+    "subtitle": "Tiền bối thực chiến từ các doanh nghiệp công nghệ.",
+    "experience": "{years} năm kinh nghiệm",
+    "company": "Công ty",
+    "position": "Vị trí",
+    "expertise": "Kỹ năng chuyên sâu",
+    "bio": "Giới thiệu",
+    "verified": "Đã xác thực",
+    "chatNow": "Nhắn tin",
+    "notOpen": "Mentor hiện không mở chat"
+  },
+  "companies": {
+    "title": "Doanh nghiệp",
+    "subtitle": "Khám phá nơi bạn muốn xây dựng sự nghiệp.",
+    "searchPlaceholder": "Tìm theo tên công ty, lĩnh vực, địa điểm...",
+    "industry": "Lĩnh vực",
+    "location": "Địa điểm",
+    "size": "Quy mô",
+    "openJobs": "{count} vị trí đang tuyển",
+    "viewJobs": "Xem việc làm"
+  },
+  "jobs": {
+    "title": "Việc làm & Thực tập",
+    "subtitle": "Cơ hội thực chiến tại các công ty công nghệ.",
+    "type": "Loại hình",
+    "internship": "Thực tập",
+    "junior": "Junior",
+    "applyNow": "Ứng tuyển",
+    "applied": "Đã ứng tuyển",
+    "deadline": "Hạn nộp",
+    "requirements": "Yêu cầu",
+    "benefits": "Quyền lợi",
+    "description": "Mô tả công việc"
+  },
+  "applications": {
+    "title": "Đơn ứng tuyển của tôi",
+    "status": {
+      "RECEIVED": "Đã nhận đơn",
+      "REVIEWING": "Đang duyệt",
+      "INTERVIEW": "Hẹn phỏng vấn",
+      "ACCEPTED": "Trúng tuyển",
+      "REJECTED": "Không phù hợp"
+    }
+  },
+  "profile": {
+    "title": "Hồ sơ cá nhân",
+    "uploadCV": "Tải lên CV (PDF)",
+    "skills": "Kỹ năng",
+    "university": "Trường",
+    "major": "Chuyên ngành",
+    "year": "Năm học",
+    "bio": "Giới thiệu bản thân"
+  },
+  "chat": {
+    "title": "Tin nhắn",
+    "empty": "Chưa có cuộc trò chuyện nào.",
+    "typeMessage": "Nhập tin nhắn..."
+  },
+  "admin": {
+    "title": "Quản trị hệ thống",
+    "pendingMentors": "Mentor chờ duyệt",
+    "pendingChannels": "Kênh chờ duyệt",
+    "reports": "Báo cáo vi phạm",
+    "approve": "Duyệt",
+    "reject": "Từ chối"
+  }
+}
