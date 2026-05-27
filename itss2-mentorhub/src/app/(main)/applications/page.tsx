@@ -1,20 +1,12 @@
+import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
 import { auth } from '@/lib/auth';
 import { getEnhancedDb } from '@/lib/enhanced-db';
 import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { formatDate } from '@/lib/utils';
-import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { ApplicationRow } from '@/components/applications/application-row';
 
 export const dynamic = 'force-dynamic';
-
-const statusVariant: Record<string, 'default' | 'success' | 'warning' | 'muted' | 'outline'> = {
-  RECEIVED: 'muted',
-  REVIEWING: 'default',
-  INTERVIEW: 'warning',
-  ACCEPTED: 'success',
-  REJECTED: 'outline',
-};
 
 export default async function ApplicationsPage() {
   const t = await getTranslations('applications');
@@ -30,26 +22,70 @@ export default async function ApplicationsPage() {
     orderBy: { createdAt: 'desc' },
   });
 
+  const counts = {
+    total: apps.length,
+    active: apps.filter((a) => a.status === 'RECEIVED' || a.status === 'REVIEWING').length,
+    interview: apps.filter((a) => a.status === 'INTERVIEW').length,
+    accepted: apps.filter((a) => a.status === 'ACCEPTED').length,
+  };
+
   return (
     <div className="space-y-6">
-      <h1 className="font-serif text-3xl tracking-tight">{t('title')}</h1>
-      <div className="space-y-3">
-        {apps.map((a) => (
-          <Link key={a.id} href={`/jobs/${a.jobId}`}>
-            <Card className="transition-colors hover:border-primary/40">
-              <CardContent className="flex items-center justify-between gap-3 py-4">
-                <div>
-                  <p className="font-medium">{a.job.title}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {a.job.company.name} · {formatDate(a.createdAt)}
-                  </p>
-                </div>
-                <Badge variant={statusVariant[a.status] ?? 'muted'}>{t(`status.${a.status}`)}</Badge>
-              </CardContent>
-            </Card>
-          </Link>
-        ))}
+      <div>
+        <h1 className="font-serif text-3xl tracking-tight">{t('title')}</h1>
+        <p className="mt-1 text-sm text-muted-foreground">{t('subtitle')}</p>
       </div>
+
+      {apps.length > 0 && (
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <StatTile label={t('summary.total')} value={counts.total} />
+          <StatTile label={t('summary.active')} value={counts.active} />
+          <StatTile label={t('summary.interview')} value={counts.interview} />
+          <StatTile label={t('summary.accepted')} value={counts.accepted} />
+        </div>
+      )}
+
+      {apps.length === 0 ? (
+        <Card className="border-dashed">
+          <CardContent className="flex flex-col items-center gap-3 py-12 text-center">
+            <p className="text-muted-foreground">{t('empty')}</p>
+            <Link href="/jobs">
+              <Button>{t('browseJobs')}</Button>
+            </Link>
+          </CardContent>
+        </Card>
+      ) : (
+        <div className="space-y-3">
+          {apps.map((a) => (
+            <ApplicationRow
+              key={a.id}
+              data={{
+                id: a.id,
+                jobId: a.jobId,
+                jobTitle: a.job.title,
+                companyName: a.job.company.name,
+                status: a.status as 'RECEIVED' | 'REVIEWING' | 'INTERVIEW' | 'ACCEPTED' | 'REJECTED',
+                coverLetter: a.coverLetter,
+                note: a.note,
+                cvSnapshotUrl: a.cvSnapshotUrl,
+                createdAt: a.createdAt.toISOString(),
+                updatedAt: a.updatedAt.toISOString(),
+              }}
+            />
+          ))}
+        </div>
+      )}
     </div>
+  );
+}
+
+function StatTile({ label, value }: { label: string; value: number }) {
+  return (
+    <Card>
+      <CardContent className="py-4">
+        <p className="text-2xl font-semibold">{value}</p>
+        <p className="text-xs text-muted-foreground">{label}</p>
+      </CardContent>
+    </Card>
   );
 }

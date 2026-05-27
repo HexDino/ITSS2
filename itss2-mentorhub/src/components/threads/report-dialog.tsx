@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useTransition } from 'react';
+import { useTranslations } from 'next-intl';
 import { Flag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/input';
@@ -31,6 +32,8 @@ export function ReportDialog({
   onOpenChange?: (v: boolean) => void;
   trigger?: React.ReactNode;
 }) {
+  const t = useTranslations('report');
+  const tCommon = useTranslations('common');
   const { toast } = useToast();
   const [reason, setReason] = useState('');
   const [pending, start] = useTransition();
@@ -40,16 +43,17 @@ export function ReportDialog({
 
   function submit() {
     if (reason.trim().length < 5) {
-      toast({ title: 'Vui lòng mô tả lý do (≥ 5 ký tự)', variant: 'destructive' });
+      toast({ title: t('reasonMin'), variant: 'destructive' });
       return;
     }
     start(async () => {
       const r = await reportAction({ targetType, targetId, reason: reason.trim() });
       if (!r.ok) {
-        toast({ title: 'Lỗi gửi báo cáo', description: r.error, variant: 'destructive' });
+        const msg = r.error === 'RATE_LIMIT' ? t('rateLimit') : t('error');
+        toast({ title: msg, variant: 'destructive' });
         return;
       }
-      toast({ title: 'Đã gửi báo cáo. Quản trị viên sẽ xem xét.' });
+      toast({ title: t('success') });
       setReason('');
       setOpen(false);
     });
@@ -61,14 +65,12 @@ export function ReportDialog({
       <DialogContent>
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <Flag className="h-4 w-4" /> Báo cáo nội dung
+            <Flag className="h-4 w-4" /> {t('title')}
           </DialogTitle>
-          <DialogDescription>
-            Mô tả lý do vi phạm (spam, ngôn từ thù địch, sai lệch,...).
-          </DialogDescription>
+          <DialogDescription>{t('description')}</DialogDescription>
         </DialogHeader>
         <div className="space-y-2">
-          <Label htmlFor="report-reason">Lý do</Label>
+          <Label htmlFor="report-reason">{t('reasonLabel')}</Label>
           <Textarea
             id="report-reason"
             value={reason}
@@ -79,13 +81,14 @@ export function ReportDialog({
         </div>
         <DialogFooter>
           <Button variant="ghost" onClick={() => setOpen(false)} disabled={pending}>
-            Hủy
+            {tCommon('cancel')}
           </Button>
           <Button onClick={submit} disabled={pending}>
-            Gửi báo cáo
+            {t('submit')}
           </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
   );
 }
+

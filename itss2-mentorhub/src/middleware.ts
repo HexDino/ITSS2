@@ -5,6 +5,7 @@ const PUBLIC_PATHS = ['/login', '/register', '/api/auth', '/api/health'];
 
 export default auth((req) => {
   const { pathname } = req.nextUrl;
+  if (pathname === '/') return NextResponse.next();
   if (PUBLIC_PATHS.some((p) => pathname.startsWith(p))) return NextResponse.next();
   if (pathname.startsWith('/_next') || pathname.startsWith('/favicon')) return NextResponse.next();
 

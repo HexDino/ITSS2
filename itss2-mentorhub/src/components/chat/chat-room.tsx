@@ -36,10 +36,14 @@ export function ChatRoomClient({
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [initialMessages.length]);
 
-  // Lightweight polling for new messages (MVP — replace with SSE/socket later)
+  // Lightweight polling for new messages (MVP — replace with SSE/socket later).
+  // Skip when the tab is hidden so we don't spam the server.
   useEffect(() => {
-    const t = setInterval(() => router.refresh(), 5000);
-    return () => clearInterval(t);
+    const tick = () => {
+      if (typeof document === 'undefined' || !document.hidden) router.refresh();
+    };
+    const id = setInterval(tick, 3000);
+    return () => clearInterval(id);
   }, [router]);
 
   function submit(e: React.FormEvent) {

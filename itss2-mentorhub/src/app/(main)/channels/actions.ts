@@ -7,6 +7,7 @@ import { getEnhancedDb } from '@/lib/enhanced-db';
 import { auth } from '@/lib/auth';
 import { htmlPlainLength } from '@/lib/utils';
 import { sanitizeHtml } from '@/lib/sanitize';
+import { rateLimit } from '@/lib/rate-limit';
 
 const threadSchema = z.object({
   channelId: z.string().cuid(),
@@ -20,6 +21,10 @@ const threadSchema = z.object({
 export async function createThreadAction(input: unknown) {
   const session = await auth();
   if (!session?.user) return { ok: false as const, error: 'UNAUTHORIZED' };
+
+  // Spam guard: ~5 threads/hour per user.
+  const rl = rateLimit(`thread:${session.user.id}`, { capacity: 5, refillPerSec: 5 / 3600 });
+  if (!rl.allowed) return { ok: false as const, error: 'RATE_LIMIT' };
 
   const parsed = threadSchema.safeParse(input);
   if (!parsed.success) return { ok: false as const, error: parsed.error.issues[0]?.message ?? 'INVALID' };

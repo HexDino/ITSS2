@@ -10,7 +10,11 @@ import type { Role } from '@prisma/client';
 const schema = z.object({
   name: z.string().min(1).max(100),
   email: z.string().email().max(200),
-  password: z.string().min(6).max(100),
+  password: z
+    .string()
+    .min(8, 'WEAK_PASSWORD')
+    .max(100)
+    .refine((v) => /[A-Za-z]/.test(v) && /\d/.test(v), 'WEAK_PASSWORD'),
   role: z.enum(['STUDENT', 'MENTOR', 'EMPLOYER']),
 });
 

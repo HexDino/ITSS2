@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
 import { auth } from '@/lib/auth';
 import { getEnhancedDb } from '@/lib/enhanced-db';
+import { prisma } from '@/lib/db';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { initials } from '@/lib/utils';
 import { ChatRoomClient } from '@/components/chat/chat-room';
@@ -25,6 +26,12 @@ export default async function ChatRoomPage({ params }: { params: Promise<{ id: s
   });
   if (!room) notFound();
   const other = room.userA.id === session.user.id ? room.userB : room.userA;
+
+  // Mark all unread incoming messages as read on visit.
+  await prisma.message.updateMany({
+    where: { roomId: room.id, senderId: { not: session.user.id }, readAt: null },
+    data: { readAt: new Date() },
+  });
 
   return (
     <div className="flex h-[calc(100vh-7rem)] flex-col rounded-lg border border-border bg-card">

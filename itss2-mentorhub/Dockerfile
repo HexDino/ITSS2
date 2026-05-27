@@ -58,7 +58,7 @@ RUN npm install --no-save --no-audit --no-fund --ignore-scripts @esbuild/linux-x
 
 # entrypoint
 COPY --chown=nextjs:nodejs docker/entrypoint.sh ./entrypoint.sh
-RUN sed -i 's/\r$//' ./entrypoint.sh && chmod +x ./entrypoint.sh && mkdir -p public/uploads/cv && chown -R nextjs:nodejs public
+RUN sed -i 's/\r$//' ./entrypoint.sh && chmod +x ./entrypoint.sh && mkdir -p private/uploads/cv public/uploads/cv && chown -R nextjs:nodejs private public
 
 USER nextjs
 EXPOSE 3000

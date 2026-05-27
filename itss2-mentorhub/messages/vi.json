@@ -82,7 +82,12 @@
     "submitLogin": "Đăng nhập",
     "submitRegister": "Tạo tài khoản",
     "invalidCredentials": "Email hoặc mật khẩu không chính xác.",
-    "registerSuccess": "Tạo tài khoản thành công. Vui lòng đăng nhập."
+    "registerSuccess": "Tạo tài khoản thành công. Vui lòng đăng nhập.",
+    "passwordHint": "Ít nhất 8 ký tự, gồm cả chữ và số.",
+    "weakPassword": "Mật khẩu quá yếu. Cần ít nhất 8 ký tự, cả chữ và số.",
+    "emailExists": "Email đã được đăng ký.",
+    "rateLimit": "Thử lại sau ít phút nữa.",
+    "registerFailed": "Đăng ký thất bại. Vui lòng thử lại."
   },
   "channels": {
     "title": "Kênh thảo luận công nghệ",
@@ -121,6 +126,8 @@
     "contentPlaceholder": "Mô tả chi tiết bối cảnh, lỗi, code đã thử...",
     "tagsLabel": "Thẻ (cách nhau bằng dấu phẩy)",
     "answersCount": "{count} câu trả lời",
+    "breadcrumbChannels": "Kênh thảo luận",
+    "acceptedSolution": "Giải pháp được chọn",
     "writeAnswer": "Viết câu trả lời",
     "answerDialogTitle": "Viết câu trả lời",
     "answerPlaceholder": "Chia sẻ kinh nghiệm, đoạn code, hoặc hướng tiếp cận...",
@@ -131,7 +138,14 @@
     "postSuccess": "Đã đăng câu trả lời.",
     "postError": "Có lỗi xảy ra. Vui lòng thử lại.",
     "validationEmpty": "Nội dung không được để trống.",
-    "validationTooLong": "Nội dung vượt quá 40.000 ký tự."
+    "validationTooLong": "Nội dung vượt quá 40.000 ký tự.",
+    "searchPlaceholder": "Tìm theo tiêu đề, nội dung hoặc thẻ...",
+    "clearSearch": "Xóa",
+    "searchResultCount": "Tìm thấy {count} kết quả cho “{q}”",
+    "noSearchResult": "Không có kết quả phù hợp",
+    "noSearchResultHint": "Hãy thử từ khóa khác hoặc xóa bộ lọc.",
+    "emptyTitle": "Chưa có thảo luận nào",
+    "emptyHint": "Hãy là người đầu tiên đặt câu hỏi trong kênh này."
   },
   "mentors": {
     "title": "Cố vấn",
@@ -145,7 +159,10 @@
     "verified": "Đã xác thực",
     "empty": "Không tìm thấy cố vấn phù hợp.",
     "chatNow": "Nhắn tin",
-    "notOpen": "Mentor hiện không mở chat"
+    "notOpen": "Mentor hiện không mở chat",
+    "searchPlaceholder": "Tìm theo tên, công ty, kỹ năng...",
+    "emptyTitle": "Chưa có mentor phù hợp",
+    "emptyHint": "Hãy thử từ khóa khác hoặc quay lại sau."
   },
   "companies": {
     "title": "Doanh nghiệp",
@@ -162,7 +179,15 @@
     },
     "openJobs": "{count} vị trí đang tuyển",
     "empty": "Không tìm thấy doanh nghiệp phù hợp.",
-    "viewJobs": "Xem việc làm"
+    "viewJobs": "Xem việc làm",
+    "verified": "Đã xác thực",
+    "about": "Giới thiệu",
+    "visitWebsite": "Truy cập website",
+    "openJobsLabel": "Vị trí mở",
+    "openJobsHeading": "Vị trí đang tuyển",
+    "noJobs": "Hiện chưa có vị trí nào mở.",
+    "emptyTitle": "Không tìm thấy doanh nghiệp",
+    "emptyHint": "Hãy thử từ khóa khác."
   },
   "jobs": {
     "title": "Việc làm & Thực tập",
@@ -172,13 +197,59 @@
     "junior": "Junior",
     "applyNow": "Ứng tuyển",
     "applied": "Đã ứng tuyển",
+    "applySuccess": "Đã gửi đơn ứng tuyển thành công.",
     "deadline": "Hạn nộp",
+    "deadlinePassed": "Đã quá hạn nộp",
+    "daysLeft": "Còn {days} ngày",
     "requirements": "Yêu cầu",
     "benefits": "Quyền lợi",
-    "description": "Mô tả công việc"
+    "description": "Mô tả công việc",
+    "coverLetter": "Thư giới thiệu",
+    "coverLetterPlaceholder": "Hãy chia sẻ vì sao bạn phù hợp với vị trí này...",
+    "cvAttached": "CV từ hồ sơ của bạn sẽ được đính kèm tự động.",
+    "noCvWarning": "Bạn chưa tải lên CV trong hồ sơ. Nhà tuyển dụng sẽ khó đánh giá đơn của bạn.",
+    "goToProfile": "Cập nhật hồ sơ",
+    "loginToApply": "Đăng nhập để ứng tuyển",
+    "studentOnly": "Chỉ sinh viên mới ứng tuyển được",
+    "viewCompany": "Xem trang doanh nghiệp",
+    "errors": {
+      "onlyStudent": "Chỉ sinh viên mới ứng tuyển được.",
+      "invalid": "Dữ liệu không hợp lệ.",
+      "jobNotFound": "Vị trí này không tồn tại.",
+      "jobClosed": "Vị trí này đã đóng.",
+      "alreadyApplied": "Bạn đã ứng tuyển vị trí này.",
+      "applyFailed": "Không thể gửi đơn. Vui lòng thử lại sau.",
+      "rateLimit": "Bạn thao tác quá nhanh. Vui lòng thử lại sau."
+    },
+    "searchPlaceholder": "Tìm theo tiêu đề, công ty, thẻ...",
+    "sortRecent": "Mới nhất",
+    "sortDeadline": "Hạn nộp gần nhất",
+    "emptyTitle": "Chưa có việc nào phù hợp",
+    "emptyHint": "Thử bỏ bộ lọc hoặc quay lại sau."
   },
   "applications": {
     "title": "Đơn ứng tuyển của tôi",
+    "subtitle": "Theo dõi tiến trình phản hồi từ nhà tuyển dụng và quản lý các đơn đã gửi.",
+    "empty": "Bạn chưa gửi đơn phục vụ nào. Hãy khám phá các cơ hội phù hợp.",
+    "browseJobs": "Xem việc làm",
+    "appliedAt": "Ngày ứng tuyển",
+    "lastUpdate": "Cập nhật lần cuối",
+    "viewDetail": "Xem chi tiết",
+    "hideDetail": "Ẩn chi tiết",
+    "viewJob": "Xem việc làm",
+    "viewCv": "Xem CV đã nộp",
+    "coverLetter": "Thư giới thiệu",
+    "noCoverLetter": "Không có thư giới thiệu.",
+    "employerNote": "Phản hồi từ nhà tuyển dụng",
+    "withdraw": "Rút đơn",
+    "withdrawn": "Đã rút đơn.",
+    "confirmWithdraw": "Bạn chắc chắn muốn rút đơn này?",
+    "summary": {
+      "total": "Tổng số đơn",
+      "active": "Đang xử lý",
+      "interview": "Phỏng vấn",
+      "accepted": "Trúng tuyển"
+    },
     "status": {
       "RECEIVED": "Đã nhận đơn",
       "REVIEWING": "Đang duyệt",
@@ -198,8 +269,12 @@
   },
   "chat": {
     "title": "Tin nhắn",
+    "subtitle": "Trao đổi 1-1 với mentor và các kết nối của bạn.",
     "empty": "Chưa có cuộc trò chuyện nào.",
-    "typeMessage": "Nhập tin nhắn..."
+    "typeMessage": "Nhập tin nhắn...",
+    "findMentor": "Tìm mentor",
+    "noMessages": "Chưa có tin nhắn.",
+    "youPrefix": "Bạn:"
   },
   "admin": {
     "title": "Quản trị hệ thống",
@@ -208,5 +283,111 @@
     "reports": "Báo cáo vi phạm",
     "approve": "Duyệt",
     "reject": "Từ chối"
+  },
+  "report": {
+    "title": "Báo cáo nội dung",
+    "description": "Mô tả lý do vi phạm (spam, ngôn từ thù địch, sai lệch,...).",
+    "reasonLabel": "Lý do",
+    "reasonMin": "Vui lòng mô tả lý do (≥ 5 ký tự).",
+    "submit": "Gửi báo cáo",
+    "success": "Đã gửi báo cáo. Quản trị viên sẽ xem xét.",
+    "error": "Lỗi gửi báo cáo",
+    "rateLimit": "Bạn báo cáo quá nhiều. Vui lòng thử lại sau."
+  },
+  "employer": {
+    "title": "Khu vực nhà tuyển dụng",
+    "subtitle": "Quản lý tin tuyển dụng & hồ sơ ứng viên",
+    "noCompanyTitle": "Chưa có doanh nghiệp",
+    "noCompanyBody": "Tài khoản của bạn chưa được liên kết với một công ty. Hãy tạo hồ sơ doanh nghiệp để bắt đầu đăng tin.",
+    "createCompany": "Tạo hồ sơ doanh nghiệp",
+    "pendingApproval": "Hồ sơ doanh nghiệp của bạn đang chờ quản trị viên xác thực.",
+    "tabJobs": "Tin tuyển dụng ({count})",
+    "tabApplications": "Hồ sơ ứng tuyển ({count})",
+    "tabNew": "+ Đăng tin mới",
+    "emptyJobs": "Chưa có tin tuyển dụng nào.",
+    "emptyApplications": "Chưa có ứng viên.",
+    "candidates": "ứng viên",
+    "appliedFor": "Ứng tuyển vào",
+    "viewCv": "Xem CV",
+    "createCompanyTitle": "Tạo hồ sơ doanh nghiệp",
+    "createCompanyHint": "Sau khi tạo, doanh nghiệp sẽ chờ quản trị viên xác thực trước khi xuất hiện công khai.",
+    "companyName": "Tên doanh nghiệp",
+    "companyWebsite": "Website",
+    "companyIndustry": "Lĩnh vực",
+    "companyLocation": "Địa điểm",
+    "companySize": "Quy mô",
+    "companyDescription": "Giới thiệu",
+    "companyCreated": "Đã tạo hồ sơ doanh nghiệp. Chờ quản trị viên xác thực.",
+    "companyCreateFailed": "Không thể tạo doanh nghiệp."
+  },
+  "landing": {
+    "badge": "Nền tảng song ngữ Việt – Nhật cho sinh viên kỹ thuật",
+    "heroTitle": "Kết nối tiền bối thực chiến, mở lối sự nghiệp công nghệ",
+    "heroSubtitle": "MentorHub & StuBiz giúp sinh viên hỏi đáp với mentor giàu kinh nghiệm, khám phá doanh nghiệp và ứng tuyển những cơ hội việc làm phù hợp – tất cả trong một nơi.",
+    "ctaPrimary": "Bắt đầu miễn phí",
+    "ctaSecondary": "Đã có tài khoản? Đăng nhập",
+    "stat1": { "value": "500+", "label": "Mentor đã xác thực" },
+    "stat2": { "value": "1.2K+", "label": "Câu hỏi được giải đáp" },
+    "stat3": { "value": "80+", "label": "Doanh nghiệp đối tác" },
+    "featuresTitle": "Mọi thứ bạn cần để phát triển nghề nghiệp",
+    "featuresSubtitle": "Hỏi đáp công nghệ, học hỏi từ tiền bối và tiếp cận cơ hội việc làm thực tế.",
+    "features": {
+      "channels": {
+        "title": "Kênh thảo luận theo công nghệ",
+        "desc": "Đặt câu hỏi đúng nơi: React, AI, DevOps, Mobile... hoặc theo công ty bạn quan tâm."
+      },
+      "mentors": {
+        "title": "Mentor thực chiến",
+        "desc": "Trò chuyện 1-1 với kỹ sư đang làm việc tại các công ty công nghệ hàng đầu."
+      },
+      "jobs": {
+        "title": "Việc làm & Thực tập",
+        "desc": "Cơ hội intern, junior phù hợp với sinh viên kỹ thuật, cập nhật liên tục."
+      },
+      "companies": {
+        "title": "Khám phá doanh nghiệp",
+        "desc": "Tìm hiểu văn hóa, lĩnh vực và vị trí đang tuyển trước khi ứng tuyển."
+      },
+      "anonymous": {
+        "title": "Hỏi ẩn danh an toàn",
+        "desc": "Bật chế độ ẩn danh để mạnh dạn hỏi mọi thắc mắc mà không lo lộ danh tính."
+      },
+      "verified": {
+        "title": "Mentor được xác thực",
+        "desc": "Mọi mentor đều được quản trị viên kiểm duyệt để đảm bảo chất lượng và uy tín."
+      }
+    },
+    "audiencesTitle": "Dành cho mọi người trong hệ sinh thái",
+    "audiencesSubtitle": "Sinh viên, mentor và nhà tuyển dụng cùng phát triển trên một nền tảng.",
+    "audiences": {
+      "students": {
+        "title": "Sinh viên kỹ thuật",
+        "desc": "Học hỏi từ tiền bối và mở ra cơ hội nghề nghiệp đầu tiên.",
+        "p1": "Hỏi đáp công nghệ với mentor",
+        "p2": "Khám phá việc làm & thực tập",
+        "p3": "Xây dựng hồ sơ chuyên nghiệp"
+      },
+      "mentors": {
+        "title": "Kỹ sư & Mentor",
+        "desc": "Chia sẻ kinh nghiệm, mở rộng mạng lưới và tạo dấu ấn cá nhân.",
+        "p1": "Trả lời câu hỏi theo chuyên môn",
+        "p2": "Tích lũy uy tín và đánh giá",
+        "p3": "Kết nối với thế hệ kế cận"
+      },
+      "employers": {
+        "title": "Doanh nghiệp",
+        "desc": "Tiếp cận sinh viên kỹ thuật chất lượng và xây dựng thương hiệu tuyển dụng.",
+        "p1": "Đăng tin tuyển dụng & thực tập",
+        "p2": "Quản lý đơn ứng tuyển",
+        "p3": "Giới thiệu văn hóa công ty"
+      }
+    },
+    "ctaTitle": "Sẵn sàng bắt đầu hành trình của bạn?",
+    "ctaSubtitle": "Tham gia cộng đồng sinh viên, mentor và doanh nghiệp công nghệ ngay hôm nay."
+  },
+  "notifications": {
+    "title": "Thông báo",
+    "empty": "Chưa có thông báo",
+    "aria": "Thông báo"
   }
 }

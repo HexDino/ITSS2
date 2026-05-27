@@ -24,6 +24,10 @@ export async function createAnswerAction(input: unknown) {
   const session = await auth();
   if (!session?.user) return { ok: false as const, error: 'UNAUTHORIZED' };
 
+  // Spam guard: ~10 answers/hour per user.
+  const rl = rateLimit(`answer:${session.user.id}`, { capacity: 10, refillPerSec: 10 / 3600 });
+  if (!rl.allowed) return { ok: false as const, error: 'RATE_LIMIT' };
+
   const parsed = schema.safeParse(input);
   if (!parsed.success) {
     return { ok: false as const, error: parsed.error.issues[0]?.message ?? 'INVALID' };

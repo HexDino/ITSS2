@@ -24,7 +24,15 @@ export default function RegisterPage() {
     start(async () => {
       const res = await registerAction(form);
       if (!res.ok) {
-        toast({ title: 'Error', description: res.error, variant: 'destructive' });
+        const msg =
+          res.error === 'WEAK_PASSWORD'
+            ? t('weakPassword')
+            : res.error === 'EMAIL_EXISTS'
+              ? t('emailExists')
+              : res.error === 'RATE_LIMIT'
+                ? t('rateLimit')
+                : t('registerFailed');
+        toast({ title: msg, variant: 'destructive' });
         return;
       }
       toast({ title: t('registerSuccess') });
@@ -50,7 +58,15 @@ export default function RegisterPage() {
           </div>
           <div className="space-y-1.5">
             <Label htmlFor="password">{t('password')}</Label>
-            <Input id="password" type="password" minLength={6} required value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} />
+            <Input
+              id="password"
+              type="password"
+              minLength={8}
+              required
+              value={form.password}
+              onChange={(e) => setForm({ ...form, password: e.target.value })}
+            />
+            <p className="text-xs text-muted-foreground">{t('passwordHint')}</p>
           </div>
           <div className="space-y-1.5">
             <Label>{t('role')}</Label>

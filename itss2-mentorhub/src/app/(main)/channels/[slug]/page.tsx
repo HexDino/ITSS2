@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { EmptyState } from '@/components/ui/empty-state';
-import { MessagesSquare } from 'lucide-react';
+import { MessagesSquare, Search } from 'lucide-react';
 import { NewThreadDialog } from '@/components/threads/new-thread-dialog';
 import { formatDate, initials } from '@/lib/utils';
 
@@ -21,11 +21,12 @@ export default async function ChannelDetailPage({
   searchParams,
 }: {
   params: Promise<{ slug: string }>;
-  searchParams: Promise<{ page?: string }>;
+  searchParams: Promise<{ page?: string; q?: string }>;
 }) {
   const { slug } = await params;
   const sp = await searchParams;
   const page = Math.max(1, Number(sp.page) || 1);
+  const q = (sp.q ?? '').trim().slice(0, 100);
   const t = await getTranslations('threads');
   const session = await auth();
   const db = await getEnhancedDb();
@@ -33,9 +34,22 @@ export default async function ChannelDetailPage({
   const channel = await db.channel.findUnique({ where: { slug } });
   if (!channel) notFound();
 
+  const where = {
+    channelId: channel.id,
+    ...(q
+      ? {
+          OR: [
+            { title: { contains: q, mode: 'insensitive' as const } },
+            { content: { contains: q, mode: 'insensitive' as const } },
+            { tags: { has: q } },
+          ],
+        }
+      : {}),
+  };
+
   const [rawThreads, totalThreads] = await Promise.all([
     db.thread.findMany({
-      where: { channelId: channel.id },
+      where,
       include: {
         author: { select: { id: true, name: true, image: true, role: true } },
         _count: { select: { answers: true } },
@@ -44,7 +58,7 @@ export default async function ChannelDetailPage({
       skip: (page - 1) * PAGE_SIZE,
       take: PAGE_SIZE,
     }),
-    db.thread.count({ where: { channelId: channel.id } }),
+    db.thread.count({ where }),
   ]);
   const totalPages = Math.max(1, Math.ceil(totalThreads / PAGE_SIZE));
 
@@ -70,12 +84,39 @@ export default async function ChannelDetailPage({
         <NewThreadDialog channelId={channel.id} channelSlug={channel.slug} />
       </header>
 
+      {/* Search form (server-side filter via ?q=) */}
+      <form method="GET" className="flex items-center gap-2">
+        <div className="relative flex-1 max-w-md">
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <input
+            name="q"
+            defaultValue={q}
+            placeholder={t('searchPlaceholder')}
+            maxLength={100}
+            className="h-9 w-full rounded-md border border-input bg-background pl-9 pr-3 text-sm"
+          />
+        </div>
+        {q ? (
+          <Link
+            href={`/channels/${slug}`}
+            className="rounded-md border border-border px-3 py-1.5 text-xs hover:bg-accent"
+          >
+            {t('clearSearch')}
+          </Link>
+        ) : null}
+      </form>
+      {q ? (
+        <p className="text-xs text-muted-foreground">
+          {t('searchResultCount', { count: totalThreads, q })}
+        </p>
+      ) : null}
+
       <div className="space-y-3">
         {threads.length === 0 ? (
           <EmptyState
             icon={<MessagesSquare className="h-6 w-6" />}
-            title="Chưa có thảo luận nào"
-            description="Hãy là người đầu tiên đặt câu hỏi trong kênh này."
+            title={q ? t('noSearchResult') : t('emptyTitle')}
+            description={q ? t('noSearchResultHint') : t('emptyHint')}
           />
         ) : (
           threads.map((th) => {
@@ -116,13 +157,19 @@ export default async function ChannelDetailPage({
       {totalPages > 1 ? (
         <nav className="flex items-center justify-center gap-2 pt-2 text-sm">
           {page > 1 ? (
-            <Link href={`/channels/${slug}?page=${page - 1}`} className="rounded-md border border-border px-3 py-1 hover:bg-accent">
+            <Link
+              href={`/channels/${slug}?${new URLSearchParams({ ...(q ? { q } : {}), page: String(page - 1) }).toString()}`}
+              className="rounded-md border border-border px-3 py-1 hover:bg-accent"
+            >
               ← Trước
             </Link>
           ) : null}
           <span className="text-muted-foreground">{page} / {totalPages}</span>
           {page < totalPages ? (
-            <Link href={`/channels/${slug}?page=${page + 1}`} className="rounded-md border border-border px-3 py-1 hover:bg-accent">
+            <Link
+              href={`/channels/${slug}?${new URLSearchParams({ ...(q ? { q } : {}), page: String(page + 1) }).toString()}`}
+              className="rounded-md border border-border px-3 py-1 hover:bg-accent"
+            >
               Sau →
             </Link>
           ) : null}

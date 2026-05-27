@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
+import { getTranslations } from 'next-intl/server';
 import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/db';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -10,6 +11,7 @@ import { formatDate } from '@/lib/utils';
 import { JobForm } from '@/components/employer/job-form';
 import { JobStatusControl } from '@/components/employer/job-status-control';
 import { ApplicationStatusControl } from '@/components/employer/application-status-control';
+import { CreateCompanyForm } from '@/components/employer/create-company-form';
 
 export const dynamic = 'force-dynamic';
 
@@ -18,6 +20,8 @@ export default async function EmployerPage() {
   if (!session?.user) redirect('/login');
   if (session.user.role !== 'EMPLOYER' && session.user.role !== 'ADMIN') redirect('/channels');
 
+  const t = await getTranslations('employer');
+
   const employerProfile = await prisma.employerProfile.findUnique({
     where: { userId: session.user.id },
     include: { company: true },
@@ -25,16 +29,17 @@ export default async function EmployerPage() {
 
   if (!employerProfile?.companyId) {
     return (
-      <div className="max-w-2xl space-y-4">
-        <h1 className="font-serif text-3xl tracking-tight">Khu vực nhà tuyển dụng</h1>
+      <div className="mx-auto max-w-2xl space-y-4">
+        <header>
+          <h1 className="font-serif text-3xl tracking-tight">{t('title')}</h1>
+          <p className="text-sm text-muted-foreground">{t('noCompanyBody')}</p>
+        </header>
         <Card>
-          <CardContent className="py-6 text-sm">
-            Tài khoản của bạn chưa được liên kết với một công ty. Liên hệ quản trị viên hoặc cập
-            nhật hồ sơ doanh nghiệp ở trang{' '}
-            <Link href="/profile" className="text-primary underline">
-              hồ sơ
-            </Link>
-            .
+          <CardHeader>
+            <CardTitle className="text-lg">{t('createCompanyTitle')}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <CreateCompanyForm />
           </CardContent>
         </Card>
       </div>
@@ -42,6 +47,7 @@ export default async function EmployerPage() {
   }
 
   const companyId = employerProfile.companyId;
+  const company = employerProfile.company;
 
   const jobs = await prisma.job.findMany({
     where: { companyId },
@@ -63,22 +69,27 @@ export default async function EmployerPage() {
     <div className="space-y-6">
       <header className="flex items-end justify-between gap-3">
         <div>
-          <h1 className="font-serif text-3xl tracking-tight">{employerProfile.company?.name}</h1>
-          <p className="text-muted-foreground">Quản lý tin tuyển dụng & hồ sơ ứng viên</p>
+          <h1 className="font-serif text-3xl tracking-tight">{company?.name}</h1>
+          <p className="text-muted-foreground">{t('subtitle')}</p>
+          {company && !company.verified && (
+            <p className="mt-1 text-xs text-amber-600 dark:text-amber-400">{t('pendingApproval')}</p>
+          )}
         </div>
       </header>
 
       <Tabs defaultValue="jobs">
         <TabsList>
-          <TabsTrigger value="jobs">Tin tuyển dụng ({jobs.length})</TabsTrigger>
-          <TabsTrigger value="applications">Hồ sơ ứng tuyển ({applications.length})</TabsTrigger>
-          <TabsTrigger value="new">+ Đăng tin mới</TabsTrigger>
+          <TabsTrigger value="jobs">{t('tabJobs', { count: jobs.length })}</TabsTrigger>
+          <TabsTrigger value="applications">
+            {t('tabApplications', { count: applications.length })}
+          </TabsTrigger>
+          <TabsTrigger value="new">{t('tabNew')}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="jobs" className="space-y-3">
           {jobs.length === 0 ? (
             <p className="rounded-md border border-dashed py-12 text-center text-muted-foreground">
-              Chưa có tin tuyển dụng nào.
+              {t('emptyJobs')}
             </p>
           ) : (
             jobs.map((j) => (
@@ -95,7 +106,9 @@ export default async function EmployerPage() {
                       <span>·</span>
                       <span>{j.location || '—'}</span>
                       <span>·</span>
-                      <span>{j._count.applications} ứng viên</span>
+                      <span>
+                        {j._count.applications} {t('candidates')}
+                      </span>
                       <span>·</span>
                       <span>{formatDate(j.createdAt)}</span>
                     </div>
@@ -110,7 +123,7 @@ export default async function EmployerPage() {
         <TabsContent value="applications" className="space-y-3">
           {applications.length === 0 ? (
             <p className="rounded-md border border-dashed py-12 text-center text-muted-foreground">
-              Chưa có ứng viên.
+              {t('emptyApplications')}
             </p>
           ) : (
             applications.map((a) => (
@@ -124,7 +137,7 @@ export default async function EmployerPage() {
                         {a.studentProfile?.major ?? '—'}
                       </div>
                       <div className="mt-1 text-xs">
-                        Ứng tuyển vào{' '}
+                        {t('appliedFor')}{' '}
                         <Link href={`/jobs/${a.job.id}`} className="text-primary">
                           {a.job.title}
                         </Link>{' '}
@@ -156,7 +169,7 @@ export default async function EmployerPage() {
                         target="_blank"
                         rel="noreferrer"
                       >
-                        Xem CV
+                        {t('viewCv')}
                       </a>
                     </Button>
                   )}

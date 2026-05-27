@@ -9,3 +9,5 @@ next-env.d.ts
 .vercel
 /src/lib/hooks/
 /prisma/schema.prisma
+/public/uploads/
+/private/

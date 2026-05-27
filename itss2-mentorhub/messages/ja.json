@@ -82,7 +82,12 @@
     "submitLogin": "ログイン",
     "submitRegister": "登録する",
     "invalidCredentials": "メールアドレスまたはパスワードが正しくありません。",
-    "registerSuccess": "登録が完了しました。ログインしてください。"
+    "registerSuccess": "登録が完了しました。ログインしてください。",
+    "passwordHint": "8文字以上、英字と数字を含めてください。",
+    "weakPassword": "パスワードが弱すぎます。英字と数字を含む8文字以上にしてください。",
+    "emailExists": "このメールアドレスは既に登録されています。",
+    "rateLimit": "しばらくしてからもう一度お試しください。",
+    "registerFailed": "登録に失敗しました。もう一度お試しください。"
   },
   "channels": {
     "title": "技術ディスカッションチャンネル",
@@ -120,6 +125,8 @@
     "contentLabel": "本文",
     "contentPlaceholder": "状況・エラー・試したコードを詳細に...",
     "tagsLabel": "タグ(カンマ区切り)",
+    "breadcrumbChannels": "チャンネル一覧",
+    "acceptedSolution": "採用された回答",
     "answersCount": "{count}件の回答",
     "writeAnswer": "回答を書く",
     "answerDialogTitle": "回答を書く",
@@ -131,7 +138,14 @@
     "postSuccess": "回答を投稿しました。",
     "postError": "エラーが発生しました。再度お試しください。",
     "validationEmpty": "本文は必須です。",
-    "validationTooLong": "本文が40,000文字を超えています。"
+    "validationTooLong": "本文が40,000文字を超えています。",
+    "searchPlaceholder": "タイトル・本文・タグで検索...",
+    "clearSearch": "クリア",
+    "searchResultCount": "「{q}」の検索結果 {count} 件",
+    "noSearchResult": "該当する結果がありません",
+    "noSearchResultHint": "別のキーワードを試すか、フィルターを解除してください。",
+    "emptyTitle": "まだ投稿がありません",
+    "emptyHint": "このチャンネルで最初の質問を投稿してみましょう。"
   },
   "mentors": {
     "title": "メンター",
@@ -145,7 +159,10 @@
     "verified": "認証済み",
     "empty": "該当するメンターが見つかりません。",
     "chatNow": "メッセージ",
-    "notOpen": "現在チャット受付停止中"
+    "notOpen": "現在チャット受付停止中",
+    "searchPlaceholder": "名前・会社・スキルで検索...",
+    "emptyTitle": "条件に合うメンターがいません",
+    "emptyHint": "別のキーワードを試すか、しばらくしてからもう一度お試しください。"
   },
   "companies": {
     "title": "企業",
@@ -162,7 +179,15 @@
     },
     "openJobs": "募集中{count}件",
     "empty": "該当する企業が見つかりません。",
-    "viewJobs": "求人を見る"
+    "viewJobs": "求人を見る",
+    "verified": "認証済み",
+    "about": "紹介",
+    "visitWebsite": "ウェブサイトを見る",
+    "openJobsLabel": "募集中",
+    "openJobsHeading": "募集中のポジション",
+    "noJobs": "現在募集中のポジションはありません。",
+    "emptyTitle": "企業が見つかりません",
+    "emptyHint": "別のキーワードで検索してください。"
   },
   "jobs": {
     "title": "求人・インターン",
@@ -172,13 +197,59 @@
     "junior": "ジュニア",
     "applyNow": "応募する",
     "applied": "応募済み",
+    "applySuccess": "応募を送信しました。",
     "deadline": "締切",
+    "deadlinePassed": "締切を過ぎました",
+    "daysLeft": "残り{days}日",
     "requirements": "応募条件",
     "benefits": "待遇",
-    "description": "職務内容"
+    "description": "職務内容",
+    "coverLetter": "カバーレター",
+    "coverLetterPlaceholder": "このポジションに適している理由を記入...",
+    "cvAttached": "プロフィールのCVが自動で添付されます。",
+    "noCvWarning": "プロフィールにCVがありません。企業が評価しづらくなります。",
+    "goToProfile": "プロフィールを更新",
+    "loginToApply": "ログインして応募",
+    "studentOnly": "応募できるのは学生のみです",
+    "viewCompany": "企業ページを見る",
+    "errors": {
+      "onlyStudent": "応募できるのは学生のみです。",
+      "invalid": "入力内容が正しくありません。",
+      "jobNotFound": "このポジションは存在しません。",
+      "jobClosed": "このポジションは募集終了しました。",
+      "alreadyApplied": "このポジションにはすでに応募済みです。",
+      "applyFailed": "応募を送信できませんでした。しばらくしてからもう一度お試しください。",
+      "rateLimit": "操作が早すぎます。しばらくしてからもう一度お試しください。"
+    },
+    "searchPlaceholder": "タイトル・会社・タグで検索...",
+    "sortRecent": "新着順",
+    "sortDeadline": "締切が近い順",
+    "emptyTitle": "条件に合う求人がありません",
+    "emptyHint": "フィルターを外すか、また後でお試しください。"
   },
   "applications": {
     "title": "応募状況",
+    "subtitle": "企業からの進捗を追跡し、提出済みの応募を管理しましょう。",
+    "empty": "まだ応募した求人がありません。あなたに合う求人を探してみましょう。",
+    "browseJobs": "求人を見る",
+    "appliedAt": "応募日",
+    "lastUpdate": "最終更新",
+    "viewDetail": "詳細を見る",
+    "hideDetail": "詳細を隠す",
+    "viewJob": "求人を見る",
+    "viewCv": "提出したCVを見る",
+    "coverLetter": "カバーレター",
+    "noCoverLetter": "カバーレターはありません。",
+    "employerNote": "企業からのコメント",
+    "withdraw": "辞退する",
+    "withdrawn": "辞退しました。",
+    "confirmWithdraw": "この応募を辞退してもよろしいですか？",
+    "summary": {
+      "total": "応募総数",
+      "active": "進行中",
+      "interview": "面接",
+      "accepted": "合格"
+    },
     "status": {
       "RECEIVED": "受付完了",
       "REVIEWING": "選考中",
@@ -198,8 +269,12 @@
   },
   "chat": {
     "title": "メッセージ",
+    "subtitle": "メンターやコネクションとの1on1チャット。",
     "empty": "まだ会話がありません。",
-    "typeMessage": "メッセージを入力..."
+    "typeMessage": "メッセージを入力...",
+    "findMentor": "メンターを探す",
+    "noMessages": "まだメッセージがありません。",
+    "youPrefix": "あなた:"
   },
   "admin": {
     "title": "システム管理",
@@ -208,5 +283,111 @@
     "reports": "通報一覧",
     "approve": "承認",
     "reject": "却下"
+  },
+  "report": {
+    "title": "コンテンツを通報",
+    "description": "違反内容（スパム、ヘイト、誤情報など）を記述してください。",
+    "reasonLabel": "理由",
+    "reasonMin": "理由を5文字以上で記述してください。",
+    "submit": "通報する",
+    "success": "通報を送信しました。管理者が確認します。",
+    "error": "通報の送信に失敗しました",
+    "rateLimit": "通報が多すぎます。しばらくしてから再度お試しください。"
+  },
+  "employer": {
+    "title": "採用担当者エリア",
+    "subtitle": "求人と応募者を管理",
+    "noCompanyTitle": "企業未登録",
+    "noCompanyBody": "アカウントが企業に紐づいていません。求人を出すには企業プロフィールを作成してください。",
+    "createCompany": "企業プロフィールを作成",
+    "pendingApproval": "企業プロフィールは管理者の承認待ちです。",
+    "tabJobs": "求人 ({count})",
+    "tabApplications": "応募者 ({count})",
+    "tabNew": "+ 新規求人",
+    "emptyJobs": "求人がまだありません。",
+    "emptyApplications": "応募者がまだいません。",
+    "candidates": "名",
+    "appliedFor": "応募先",
+    "viewCv": "CVを見る",
+    "createCompanyTitle": "企業プロフィールの作成",
+    "createCompanyHint": "作成後、管理者の承認を経て公開されます。",
+    "companyName": "企業名",
+    "companyWebsite": "ウェブサイト",
+    "companyIndustry": "業種",
+    "companyLocation": "所在地",
+    "companySize": "規模",
+    "companyDescription": "会社紹介",
+    "companyCreated": "企業プロフィールを作成しました。承認をお待ちください。",
+    "companyCreateFailed": "企業を作成できませんでした。"
+  },
+  "landing": {
+    "badge": "ベトナム・日本の技術系学生向けバイリンガルプラットフォーム",
+    "heroTitle": "実務経験豊富な先輩とつながり、技術キャリアを切り拓こう",
+    "heroSubtitle": "MentorHub & StuBizは、学生がメンターに質問し、企業を探し、自分に合った求人に応募できるワンストッププラットフォームです。",
+    "ctaPrimary": "無料ではじめる",
+    "ctaSecondary": "アカウントをお持ちの方はログイン",
+    "stat1": { "value": "500+", "label": "認証済みメンター" },
+    "stat2": { "value": "1.2K+", "label": "解決済みの質問" },
+    "stat3": { "value": "80+", "label": "パートナー企業" },
+    "featuresTitle": "キャリア成長に必要なすべて",
+    "featuresSubtitle": "技術Q&A、先輩からの学び、実際の就職機会へのアクセス。",
+    "features": {
+      "channels": {
+        "title": "技術別ディスカッション",
+        "desc": "React、AI、DevOps、Mobileなど、興味のある分野や企業ごとに質問できます。"
+      },
+      "mentors": {
+        "title": "実務メンター",
+        "desc": "トップIT企業で活躍する現役エンジニアと1対1でチャットできます。"
+      },
+      "jobs": {
+        "title": "求人・インターン",
+        "desc": "技術系学生に合ったインターン・ジュニア求人を継続的に更新しています。"
+      },
+      "companies": {
+        "title": "企業を探す",
+        "desc": "応募前に文化・事業領域・募集ポジションを確認できます。"
+      },
+      "anonymous": {
+        "title": "安心の匿名質問",
+        "desc": "匿名モードをオンにすれば、身元を気にせず気軽に質問できます。"
+      },
+      "verified": {
+        "title": "認証済みメンター",
+        "desc": "すべてのメンターは管理者による審査を経ており、品質と信頼性を担保します。"
+      }
+    },
+    "audiencesTitle": "エコシステムのすべての人へ",
+    "audiencesSubtitle": "学生・メンター・採用担当者が同じプラットフォームで成長します。",
+    "audiences": {
+      "students": {
+        "title": "技術系学生",
+        "desc": "先輩から学び、最初のキャリアチャンスを掴みましょう。",
+        "p1": "メンターに技術質問",
+        "p2": "求人・インターンを探索",
+        "p3": "プロフェッショナルなプロフィール作成"
+      },
+      "mentors": {
+        "title": "エンジニア・メンター",
+        "desc": "経験を共有し、ネットワークを広げ、自分のブランドを築きましょう。",
+        "p1": "専門分野で回答する",
+        "p2": "信頼スコアと評価を積む",
+        "p3": "次世代のエンジニアと繋がる"
+      },
+      "employers": {
+        "title": "企業",
+        "desc": "優秀な技術系学生にアプローチし、採用ブランドを構築しましょう。",
+        "p1": "求人・インターン情報の掲載",
+        "p2": "応募者の管理",
+        "p3": "企業文化のアピール"
+      }
+    },
+    "ctaTitle": "あなたの旅をはじめる準備はできていますか?",
+    "ctaSubtitle": "学生・メンター・企業が集まる技術コミュニティに今すぐ参加しましょう。"
+  },
+  "notifications": {
+    "title": "通知",
+    "empty": "通知はまだありません",
+    "aria": "通知"
   }
 }

@@ -33,7 +33,11 @@ export function JobForm() {
     start(async () => {
       const r = await createJobAction(form);
       if (!r.ok) {
-        toast({ title: 'Lỗi đăng tin', description: r.error, variant: 'destructive' });
+        const desc =
+          r.error === 'INVALID_DEADLINE'
+            ? 'Hạn nộp không hợp lệ (đã qua hoặc sai định dạng).'
+            : r.error;
+        toast({ title: 'Lỗi đăng tin', description: desc, variant: 'destructive' });
         return;
       }
       toast({ title: 'Đã đăng tin tuyển dụng' });

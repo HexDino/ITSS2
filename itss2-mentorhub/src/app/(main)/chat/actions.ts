@@ -6,6 +6,7 @@ import { redirect } from 'next/navigation';
 import { getEnhancedDb } from '@/lib/enhanced-db';
 import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/db';
+import { rateLimit } from '@/lib/rate-limit';
 
 export async function startChatAction(targetUserId: string) {
   const session = await auth();
@@ -31,6 +32,11 @@ const messageSchema = z.object({
 export async function sendMessageAction(input: unknown) {
   const session = await auth();
   if (!session?.user) return { ok: false as const, error: 'UNAUTHORIZED' };
+
+  // Spam guard: ~30 messages/minute per user (burst 30, refill 30/min).
+  const rl = rateLimit(`msg:${session.user.id}`, { capacity: 30, refillPerSec: 0.5 });
+  if (!rl.allowed) return { ok: false as const, error: 'RATE_LIMIT' };
+
   const parsed = messageSchema.safeParse(input);
   if (!parsed.success) return { ok: false as const, error: 'INVALID' };
 
@@ -42,6 +48,28 @@ export async function sendMessageAction(input: unknown) {
       senderId: session.user.id,
     },
   });
+  // Bump room timestamp so chat list ordering reflects the latest activity.
+  await db.chatRoom.update({
+    where: { id: parsed.data.roomId },
+    data: { updatedAt: new Date() },
+  });
   revalidatePath(`/chat/${parsed.data.roomId}`);
+  revalidatePath('/chat');
+  return { ok: true as const };
+}
+
+export async function markRoomReadAction(roomId: string) {
+  const session = await auth();
+  if (!session?.user) return { ok: false as const, error: 'UNAUTHORIZED' };
+  // Mark every unread message in the room (not sent by me) as read.
+  await prisma.message.updateMany({
+    where: {
+      roomId,
+      senderId: { not: session.user.id },
+      readAt: null,
+    },
+    data: { readAt: new Date() },
+  });
+  revalidatePath('/chat');
   return { ok: true as const };
 }
