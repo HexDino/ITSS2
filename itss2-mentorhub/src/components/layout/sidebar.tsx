@@ -3,13 +3,14 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { MessagesSquare, Users } from 'lucide-react';
+import { MessagesSquare, Users, MessageCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-// Bản demo: chỉ giữ Kênh thảo luận và Cố vấn ở thanh điều hướng.
+// Bản demo: chỉ giữ Kênh thảo luận, Cố vấn và Tin nhắn ở thanh điều hướng.
 const items = [
   { href: '/channels', key: 'channels', icon: MessagesSquare },
   { href: '/mentors', key: 'mentors', icon: Users },
+  { href: '/chat', key: 'chat', icon: MessageCircle },
 ] as const;
 
 export function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {

@@ -5,7 +5,7 @@ import { ThemeToggle } from './theme-toggle';
 import { MobileSidebar } from './mobile-sidebar';
 
 // Bản demo: bỏ tìm kiếm header, ngôn ngữ, thông báo và menu đăng nhập/đăng ký.
-export function Topbar() {
+export function Topbar({ right }: { right?: React.ReactNode }) {
   return (
     <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-border bg-background/80 px-4 backdrop-blur md:px-6">
       <div className="flex items-center gap-2 md:hidden">
@@ -14,7 +14,8 @@ export function Topbar() {
           Stubiz
         </Link>
       </div>
-      <div className="ml-auto flex items-center gap-1">
+      <div className="ml-auto flex items-center gap-2">
+        {right}
         <ThemeToggle />
       </div>
     </header>
