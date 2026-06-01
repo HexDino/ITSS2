@@ -11,3 +11,6 @@ next-env.d.ts
 /prisma/schema.prisma
 /public/uploads/
 /private/
+docker_build.log
+typecheck_errors.txt
+typecheck_demo.txt
