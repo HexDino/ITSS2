@@ -274,7 +274,9 @@
     "typeMessage": "Nhập tin nhắn...",
     "findMentor": "Tìm mentor",
     "noMessages": "Chưa có tin nhắn.",
-    "youPrefix": "Bạn:"
+    "youPrefix": "Bạn:",
+    "guestBadge": "Ẩn danh · {name}",
+    "guestIntro": "Bạn có thể nhắn tin với mentor ngay mà không cần đăng ký. Chọn một mentor để bắt đầu — chúng tôi sẽ tự tạo phiên ẩn danh trong trình duyệt của bạn."
   },
   "admin": {
     "title": "Quản trị hệ thống",

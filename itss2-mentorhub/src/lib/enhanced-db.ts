@@ -1,7 +1,7 @@
 import { enhance } from '@zenstackhq/runtime';
 import { prisma } from './db';
 import { auth } from './auth';
-import type { PrismaClient } from '@prisma/client';
+import type { PrismaClient, Role } from '@prisma/client';
 
 /**
  * Returns a Prisma client enhanced with ZenStack access policies bound to the
@@ -18,5 +18,17 @@ export async function getEnhancedDb(): Promise<PrismaClient> {
   const user = session?.user
     ? { id: session.user.id, role: session.user.role }
     : undefined;
+  return enhance(prisma, { user }) as unknown as PrismaClient;
+}
+
+/**
+ * Same as `getEnhancedDb()` but binds policies to an explicit actor (e.g. a
+ * cookie-backed anonymous guest user). Use this from chat code paths so guest
+ * visitors still pass ZenStack `auth() != null` / `auth() == sender` checks.
+ */
+export function getEnhancedDbForActor(
+  actor: { id: string; role: Role } | null,
+): PrismaClient {
+  const user = actor ? { id: actor.id, role: actor.role } : undefined;
   return enhance(prisma, { user }) as unknown as PrismaClient;
 }

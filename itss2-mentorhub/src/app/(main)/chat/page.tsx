@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
-import { auth } from '@/lib/auth';
-import { getEnhancedDb } from '@/lib/enhanced-db';
+import { getActor } from '@/lib/actor';
+import { getEnhancedDbForActor } from '@/lib/enhanced-db';
 import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
@@ -12,9 +12,27 @@ export const dynamic = 'force-dynamic';
 
 export default async function ChatPage() {
   const t = await getTranslations('chat');
-  const session = await auth();
-  if (!session?.user) return null;
-  const db = await getEnhancedDb();
+  const actor = await getActor();
+  // No session and no guest cookie yet — show empty CTA instead of a 404.
+  if (!actor) {
+    return (
+      <div className="space-y-6">
+        <div>
+          <h1 className="font-serif text-3xl tracking-tight">{t('title')}</h1>
+          <p className="mt-1 text-sm text-muted-foreground">{t('subtitle')}</p>
+        </div>
+        <Card className="border-dashed">
+          <CardContent className="flex flex-col items-center gap-3 py-12 text-center">
+            <p className="text-muted-foreground">{t('guestIntro')}</p>
+            <Link href="/mentors">
+              <Button>{t('findMentor')}</Button>
+            </Link>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+  const db = getEnhancedDbForActor(actor);
 
   const rooms = await db.chatRoom.findMany({
     include: {
@@ -24,7 +42,7 @@ export default async function ChatPage() {
       _count: {
         select: {
           messages: {
-            where: { senderId: { not: session.user.id }, readAt: null },
+            where: { senderId: { not: actor.id }, readAt: null },
           },
         },
       },
@@ -38,6 +56,11 @@ export default async function ChatPage() {
         <div>
           <h1 className="font-serif text-3xl tracking-tight">{t('title')}</h1>
           <p className="mt-1 text-sm text-muted-foreground">{t('subtitle')}</p>
+          {actor.isGuest ? (
+            <Badge variant="outline" className="mt-2">
+              {t('guestBadge', { name: actor.name })}
+            </Badge>
+          ) : null}
         </div>
         <Link href="/mentors">
           <Button variant="outline" size="sm">
@@ -57,7 +80,7 @@ export default async function ChatPage() {
       ) : (
         <div className="space-y-2">
           {rooms.map((r) => {
-            const other = r.userA.id === session.user.id ? r.userB : r.userA;
+            const other = r.userA.id === actor.id ? r.userB : r.userA;
             const last = r.messages[0];
             const unread = r._count.messages;
             return (
@@ -86,7 +109,7 @@ export default async function ChatPage() {
                             unread > 0 ? 'font-medium text-foreground' : 'text-muted-foreground'
                           }`}
                         >
-                          {last.senderId === session.user.id ? `${t('youPrefix')} ` : ''}
+                          {last.senderId === actor.id ? `${t('youPrefix')} ` : ''}
                           {last.content} · {formatDate(last.createdAt)}
                         </p>
                       ) : (

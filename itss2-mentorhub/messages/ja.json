@@ -274,7 +274,9 @@
     "typeMessage": "メッセージを入力...",
     "findMentor": "メンターを探す",
     "noMessages": "まだメッセージがありません。",
-    "youPrefix": "あなた:"
+    "youPrefix": "あなた:",
+    "guestBadge": "匿名 · {name}",
+    "guestIntro": "登録不要でメンターにメッセージを送れます。メンターを選ぶと、ブラウザに匿名セッションが自動作成されます。"
   },
   "admin": {
     "title": "システム管理",

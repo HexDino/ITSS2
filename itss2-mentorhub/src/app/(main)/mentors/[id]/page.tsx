@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
+import { StartChatButton } from '@/components/chat/start-chat-button';
 import { initials } from '@/lib/utils';
 
 export const dynamic = 'force-dynamic';
@@ -35,6 +36,11 @@ export default async function MentorProfilePage({ params }: { params: Promise<{ 
             </p>
             <Badge variant="success">{t('verified')}</Badge>
           </div>
+          {mentor.openToChat ? (
+            <StartChatButton targetUserId={mentor.userId} label={t('chatNow')} />
+          ) : (
+            <Badge variant="outline">{t('notOpen')}</Badge>
+          )}
         </CardHeader>
         <CardContent className="space-y-4">
           <Separator />
