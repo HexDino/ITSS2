@@ -8,6 +8,8 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { formatDate, initials } from '@/lib/utils';
+import { AnswerDialog } from '@/components/threads/answer-dialog';
+import { Button } from '@/components/ui/button';
 
 export const dynamic = 'force-dynamic';
 
@@ -95,6 +97,9 @@ export default async function ThreadDetailPage({ params }: { params: Promise<{ i
           <MessageSquare className="h-5 w-5 text-muted-foreground" />
           <h2 className="font-serif text-xl">{t('answersCount', { count: answers.length })}</h2>
         </div>
+        {!thread.closed && (
+          <AnswerDialog threadId={thread.id} trigger={<Button>{t('writeAnswer')}</Button>} />
+        )}
       </div>
 
       {/* Answers */}

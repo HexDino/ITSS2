@@ -3,8 +3,9 @@
 import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-import { getEnhancedDb } from '@/lib/enhanced-db';
+import { getEnhancedDb, getEnhancedDbForActor } from '@/lib/enhanced-db';
 import { auth } from '@/lib/auth';
+import { getOrCreateActor } from '@/lib/actor';
 import { htmlPlainLength } from '@/lib/utils';
 import { sanitizeHtml } from '@/lib/sanitize';
 import { rateLimit } from '@/lib/rate-limit';
@@ -19,11 +20,14 @@ const threadSchema = z.object({
 });
 
 export async function createThreadAction(input: unknown) {
-  const session = await auth();
-  if (!session?.user) return { ok: false as const, error: 'UNAUTHORIZED' };
+  // Allow guests: auto-create a cookie-backed anonymous User when needed.
+  const actor = await getOrCreateActor();
 
-  // Spam guard: ~5 threads/hour per user.
-  const rl = rateLimit(`thread:${session.user.id}`, { capacity: 5, refillPerSec: 5 / 3600 });
+  // Spam guard: stricter for guests (~3/hour) than logged-in users (~5/hour).
+  const rl = rateLimit(`thread:${actor.id}`, {
+    capacity: actor.isGuest ? 3 : 5,
+    refillPerSec: (actor.isGuest ? 3 : 5) / 3600,
+  });
   if (!rl.allowed) return { ok: false as const, error: 'RATE_LIMIT' };
 
   const parsed = threadSchema.safeParse(input);
@@ -41,14 +45,16 @@ export async function createThreadAction(input: unknown) {
         .slice(0, 8)
     : [];
 
-  const db = await getEnhancedDb();
+  const db = getEnhancedDbForActor(actor);
+  // Guests are always treated as anonymous — their generated name is opaque anyway.
+  const isAnonymous = actor.isGuest ? true : parsed.data.isAnonymous ?? false;
   const thread = await db.thread.create({
     data: {
       title: parsed.data.title,
       content: cleanContent,
       channelId: parsed.data.channelId,
-      authorId: session.user.id,
-      isAnonymous: parsed.data.isAnonymous ?? false,
+      authorId: actor.id,
+      isAnonymous,
       tags,
     },
   });

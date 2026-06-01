@@ -2,9 +2,10 @@
 
 import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
-import { getEnhancedDb } from '@/lib/enhanced-db';
+import { getEnhancedDb, getEnhancedDbForActor } from '@/lib/enhanced-db';
 import { prisma } from '@/lib/db';
 import { auth } from '@/lib/auth';
+import { getOrCreateActor } from '@/lib/actor';
 import { htmlPlainLength } from '@/lib/utils';
 import { sanitizeHtml } from '@/lib/sanitize';
 import { rateLimit } from '@/lib/rate-limit';
@@ -21,11 +22,14 @@ const schema = z.object({
 });
 
 export async function createAnswerAction(input: unknown) {
-  const session = await auth();
-  if (!session?.user) return { ok: false as const, error: 'UNAUTHORIZED' };
+  // Allow guests: auto-create a cookie-backed anonymous User when needed.
+  const actor = await getOrCreateActor();
 
-  // Spam guard: ~10 answers/hour per user.
-  const rl = rateLimit(`answer:${session.user.id}`, { capacity: 10, refillPerSec: 10 / 3600 });
+  // Spam guard: guests get ~5/hour, logged-in users ~10/hour.
+  const rl = rateLimit(`answer:${actor.id}`, {
+    capacity: actor.isGuest ? 5 : 10,
+    refillPerSec: (actor.isGuest ? 5 : 10) / 3600,
+  });
   if (!rl.allowed) return { ok: false as const, error: 'RATE_LIMIT' };
 
   const parsed = schema.safeParse(input);
@@ -39,21 +43,23 @@ export async function createAnswerAction(input: unknown) {
 
   const cleanContent = sanitizeHtml(parsed.data.content);
 
-  const db = await getEnhancedDb();
+  const db = getEnhancedDbForActor(actor);
+  // Guests are always anonymous regardless of the toggle.
+  const isAnonymous = actor.isGuest ? true : parsed.data.isAnonymous;
   try {
     const answer = await db.answer.create({
       data: {
         threadId: parsed.data.questionId,
         content: cleanContent,
-        isAnonymous: parsed.data.isAnonymous,
-        authorId: session.user.id,
+        isAnonymous,
+        authorId: actor.id,
       },
     });
     // Notify thread author asynchronously (don't block response).
     void prisma.thread
       .findUnique({ where: { id: parsed.data.questionId }, select: { authorId: true, title: true } })
       .then((thread) => {
-        if (thread && thread.authorId !== session.user.id) {
+        if (thread && thread.authorId !== actor.id) {
           return createNotification({
             recipientId: thread.authorId,
             type: 'NEW_ANSWER',

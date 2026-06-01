@@ -120,6 +120,7 @@
   },
   "threads": {
     "newTitle": "Đăng câu hỏi / chủ đề mới",
+    "newThread": "Đăng bài mới",
     "titleLabel": "Tiêu đề",
     "titlePlaceholder": "Tóm tắt vấn đề trong một câu...",
     "contentLabel": "Nội dung",

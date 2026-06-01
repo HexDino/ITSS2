@@ -7,8 +7,10 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { EmptyState } from '@/components/ui/empty-state';
-import { MessagesSquare, Search } from 'lucide-react';
+import { MessagesSquare, Search, Plus } from 'lucide-react';
 import { formatDate, initials } from '@/lib/utils';
+import { NewThreadDialog } from '@/components/threads/new-thread-dialog';
+import { Button } from '@/components/ui/button';
 
 export const dynamic = 'force-dynamic';
 
@@ -78,6 +80,16 @@ export default async function ChannelDetailPage({
             ))}
           </div>
         </div>
+        <NewThreadDialog
+          channelId={channel.id}
+          channelSlug={channel.slug}
+          trigger={
+            <Button>
+              <Plus className="mr-1.5 h-4 w-4" />
+              {t('newThread')}
+            </Button>
+          }
+        />
       </header>
 
       {/* Search form (server-side filter via ?q=) */}

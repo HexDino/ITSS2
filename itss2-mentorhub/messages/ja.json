@@ -120,6 +120,7 @@
   },
   "threads": {
     "newTitle": "新しい質問・トピックを投稿",
+    "newThread": "新規投稿",
     "titleLabel": "タイトル",
     "titlePlaceholder": "問題を一文で要約...",
     "contentLabel": "本文",
