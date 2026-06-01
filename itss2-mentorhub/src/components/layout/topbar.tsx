@@ -61,7 +61,7 @@ export function Topbar() {
                 <Link href="/profile">{t('profile')}</Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => signOut({ callbackUrl: '/login' })}>
+              <DropdownMenuItem onClick={() => signOut({ callbackUrl: '/home' })}>
                 <LogOut className="h-4 w-4" />
                 {t('logout')}
               </DropdownMenuItem>

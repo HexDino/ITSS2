@@ -6,7 +6,7 @@ import type { StudentProfile } from '@prisma/client';
 import { Input, Textarea } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { TagInput } from '@/components/ui/tag-input';
 import { useToast } from '@/components/ui/toast';
 import { updateStudentProfileAction } from '@/app/(main)/profile/actions';
 import { Upload, FileText } from 'lucide-react';
@@ -25,7 +25,7 @@ export function StudentProfileForm({ profile }: { profile: StudentProfile | null
     university: profile?.university ?? '',
     major: profile?.major ?? '',
     yearOfStudy: profile?.yearOfStudy ?? '',
-    skills: (profile?.skills ?? []).join(', '),
+    skills: profile?.skills ?? [],
     github: profile?.github ?? '',
     linkedin: profile?.linkedin ?? '',
     portfolio: profile?.portfolio ?? '',
@@ -58,7 +58,7 @@ export function StudentProfileForm({ profile }: { profile: StudentProfile | null
   function save(e: React.FormEvent) {
     e.preventDefault();
     start(async () => {
-      const res = await updateStudentProfileAction(form);
+      const res = await updateStudentProfileAction({ ...form, skills: form.skills.join(', ') });
       toast({
         title: res.ok ? tCommon('save') : res.error,
         variant: res.ok ? undefined : 'destructive',
@@ -98,9 +98,9 @@ export function StudentProfileForm({ profile }: { profile: StudentProfile | null
         </Field>
       </div>
       <Field label={t('skills')}>
-        <Input
+        <TagInput
           value={form.skills}
-          onChange={(e) => setForm({ ...form, skills: e.target.value })}
+          onChange={(skills) => setForm({ ...form, skills })}
           placeholder="react, typescript, postgresql"
         />
       </Field>
@@ -118,18 +118,6 @@ export function StudentProfileForm({ profile }: { profile: StudentProfile | null
             </a>
           )}
         </div>
-      </div>
-
-      <div className="flex flex-wrap gap-1">
-        {form.skills
-          .split(',')
-          .map((s) => s.trim())
-          .filter(Boolean)
-          .map((s) => (
-            <Badge key={s} variant="outline">
-              {s}
-            </Badge>
-          ))}
       </div>
 
       <Button type="submit" disabled={pending}>

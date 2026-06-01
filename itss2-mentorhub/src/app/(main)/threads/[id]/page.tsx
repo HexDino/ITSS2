@@ -63,7 +63,7 @@ export default async function ThreadDetailPage({ params }: { params: Promise<{ i
         </Link>
         <ChevronRight className="h-3 w-3" />
         <Link
-          href={`/channels/${thread.channel.id}`}
+          href={`/channels/${thread.channel.slug}`}
           className="hover:text-foreground hover:underline"
         >
           {thread.channel.name}

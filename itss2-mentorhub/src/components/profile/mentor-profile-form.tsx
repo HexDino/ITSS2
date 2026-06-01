@@ -7,6 +7,7 @@ import { Input, Textarea } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
+import { TagInput } from '@/components/ui/tag-input';
 import { useToast } from '@/components/ui/toast';
 import { updateMentorProfileAction } from '@/app/(main)/profile/actions';
 
@@ -20,14 +21,14 @@ export function MentorProfileForm({ profile }: { profile: MentorProfile | null }
     position: profile?.position ?? '',
     yearsOfExperience: profile?.yearsOfExperience ?? 0,
     bio: profile?.bio ?? '',
-    expertise: (profile?.expertise ?? []).join(', '),
+    expertise: profile?.expertise ?? [],
     openToChat: profile?.openToChat ?? true,
   });
 
   function save(e: React.FormEvent) {
     e.preventDefault();
     start(async () => {
-      const res = await updateMentorProfileAction(form);
+      const res = await updateMentorProfileAction({ ...form, expertise: form.expertise.join(', ') });
       toast({
         title: res.ok ? tCommon('save') : res.error,
         variant: res.ok ? undefined : 'destructive',
@@ -55,9 +56,9 @@ export function MentorProfileForm({ profile }: { profile: MentorProfile | null }
         </Field>
       </div>
       <Field label={t('expertise')}>
-        <Input
+        <TagInput
           value={form.expertise}
-          onChange={(e) => setForm({ ...form, expertise: e.target.value })}
+          onChange={(expertise) => setForm({ ...form, expertise })}
           placeholder="kubernetes, golang, sre"
         />
       </Field>
