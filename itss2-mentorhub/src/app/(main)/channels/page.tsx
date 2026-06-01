@@ -1,13 +1,12 @@
 import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
-import { getEnhancedDb } from '@/lib/enhanced-db';
+import { prisma } from '@/lib/db';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { EmptyState } from '@/components/ui/empty-state';
 import { Pagination } from '@/components/ui/pagination';
 import { FilterChips } from '@/components/layout/filter-chips';
-import { CreateChannelDialog } from '@/components/channels/create-channel-dialog';
 import { Search, MessagesSquare } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
@@ -32,9 +31,10 @@ export default async function ChannelsPage({ searchParams }: PageProps) {
   const t = await getTranslations('channels');
   const tCommon = await getTranslations('common');
   const sp = await searchParams;
-  const db = await getEnhancedDb();
+  const db = prisma;
 
   const where = {
+    approved: true,
     ...(sp.q
       ? {
           OR: [
@@ -72,7 +72,6 @@ export default async function ChannelsPage({ searchParams }: PageProps) {
             <h1 className="font-serif text-3xl tracking-tight md:text-4xl">{t('title')}</h1>
             <p className="max-w-xl text-sm text-muted-foreground md:text-base">{t('subtitle')}</p>
           </div>
-          <CreateChannelDialog />
         </div>
 
         <form action="/channels" className="relative mt-6 max-w-xl">

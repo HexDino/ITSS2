@@ -2,15 +2,11 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
 import { ChevronRight, MessageSquare, CheckCircle2 } from 'lucide-react';
-import { getEnhancedDb } from '@/lib/enhanced-db';
 import { prisma } from '@/lib/db';
-import { auth } from '@/lib/auth';
 import { sanitizeAnonymous, sanitizeAnonymousList } from '@/lib/anonymous';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
-import { AnswerDialog } from '@/components/threads/answer-dialog';
-import { AnswerToolbar } from '@/components/threads/answer-toolbar';
 import { formatDate, initials } from '@/lib/utils';
 
 export const dynamic = 'force-dynamic';
@@ -19,8 +15,7 @@ export default async function ThreadDetailPage({ params }: { params: Promise<{ i
   const { id } = await params;
   const t = await getTranslations('threads');
   const tCommon = await getTranslations('common');
-  const session = await auth();
-  const db = await getEnhancedDb();
+  const db = prisma;
 
   const raw = await db.thread.findUnique({
     where: { id },
@@ -35,22 +30,7 @@ export default async function ThreadDetailPage({ params }: { params: Promise<{ i
   });
   if (!raw) notFound();
 
-  // Load this user's votes on these answers (only for authenticated viewers).
-  const myVotes = session?.user
-    ? new Set(
-        (
-          await prisma.answerVote.findMany({
-            where: {
-              userId: session.user.id,
-              answerId: { in: raw.answers.map((a) => a.id) },
-            },
-            select: { answerId: true },
-          })
-        ).map((v) => v.answerId),
-      )
-    : new Set<string>();
-
-  const viewer = { id: session?.user?.id, role: session?.user?.role };
+  const viewer = { id: undefined, role: undefined };
   const thread = sanitizeAnonymous(raw, viewer);
   const answers = sanitizeAnonymousList(raw.answers, viewer);
 
@@ -115,7 +95,6 @@ export default async function ThreadDetailPage({ params }: { params: Promise<{ i
           <MessageSquare className="h-5 w-5 text-muted-foreground" />
           <h2 className="font-serif text-xl">{t('answersCount', { count: answers.length })}</h2>
         </div>
-        <AnswerDialog threadId={thread.id} />
       </div>
 
       {/* Answers */}
@@ -153,18 +132,6 @@ export default async function ThreadDetailPage({ params }: { params: Promise<{ i
                   className="prose-claude"
                   dangerouslySetInnerHTML={{ __html: a.content }}
                 />
-                <div className="border-t border-border/60 pt-3">
-                  <AnswerToolbar
-                    answerId={a.id}
-                    upvotes={a.upvotes}
-                    accepted={a.accepted}
-                    voted={myVotes.has(a.id)}
-                    canAccept={
-                      !!session?.user &&
-                      (session.user.id === raw.authorId || session.user.role === 'ADMIN')
-                    }
-                  />
-                </div>
               </CardContent>
             </Card>
           ))

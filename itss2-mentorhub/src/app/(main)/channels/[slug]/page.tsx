@@ -1,15 +1,13 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
-import { getEnhancedDb } from '@/lib/enhanced-db';
-import { auth } from '@/lib/auth';
+import { prisma } from '@/lib/db';
 import { sanitizeAnonymousList } from '@/lib/anonymous';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { EmptyState } from '@/components/ui/empty-state';
 import { MessagesSquare, Search } from 'lucide-react';
-import { NewThreadDialog } from '@/components/threads/new-thread-dialog';
 import { formatDate, initials } from '@/lib/utils';
 
 export const dynamic = 'force-dynamic';
@@ -28,8 +26,7 @@ export default async function ChannelDetailPage({
   const page = Math.max(1, Number(sp.page) || 1);
   const q = (sp.q ?? '').trim().slice(0, 100);
   const t = await getTranslations('threads');
-  const session = await auth();
-  const db = await getEnhancedDb();
+  const db = prisma;
 
   const channel = await db.channel.findUnique({ where: { slug } });
   if (!channel) notFound();
@@ -62,7 +59,7 @@ export default async function ChannelDetailPage({
   ]);
   const totalPages = Math.max(1, Math.ceil(totalThreads / PAGE_SIZE));
 
-  const threads = sanitizeAnonymousList(rawThreads, { id: session?.user?.id, role: session?.user?.role });
+  const threads = sanitizeAnonymousList(rawThreads, { id: undefined, role: undefined });
 
   return (
     <div className="space-y-6">
@@ -81,7 +78,6 @@ export default async function ChannelDetailPage({
             ))}
           </div>
         </div>
-        <NewThreadDialog channelId={channel.id} channelSlug={channel.slug} />
       </header>
 
       {/* Search form (server-side filter via ?q=) */}

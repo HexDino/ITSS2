@@ -1,20 +1,18 @@
 import { notFound } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
-import { getEnhancedDb } from '@/lib/enhanced-db';
+import { prisma } from '@/lib/db';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { initials } from '@/lib/utils';
-import { StartChatButton } from '@/components/chat/start-chat-button';
 
 export const dynamic = 'force-dynamic';
 
 export default async function MentorProfilePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const t = await getTranslations('mentors');
-  const db = await getEnhancedDb();
+  const db = prisma;
 
   const mentor = await db.mentorProfile.findFirst({
     where: { userId: id, verified: true },
@@ -37,13 +35,6 @@ export default async function MentorProfilePage({ params }: { params: Promise<{ 
             </p>
             <Badge variant="success">{t('verified')}</Badge>
           </div>
-          {mentor.openToChat ? (
-            <StartChatButton targetUserId={mentor.userId} label={t('chatNow')} />
-          ) : (
-            <Button variant="outline" disabled>
-              {t('notOpen')}
-            </Button>
-          )}
         </CardHeader>
         <CardContent className="space-y-4">
           <Separator />

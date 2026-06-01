@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
-import { getEnhancedDb } from '@/lib/enhanced-db';
+import { prisma } from '@/lib/db';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
@@ -23,7 +23,7 @@ export default async function MentorsPage({ searchParams }: PageProps) {
   const t = await getTranslations('mentors');
   const tCommon = await getTranslations('common');
   const sp = await searchParams;
-  const db = await getEnhancedDb();
+  const db = prisma;
 
   const baseWhere = { verified: true } as const;
 
