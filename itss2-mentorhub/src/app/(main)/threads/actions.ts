@@ -16,7 +16,7 @@ import { createNotification } from '@/lib/notify';
  * limit on plain-text content, persists via ZenStack-enhanced Prisma (policy aware).
  */
 const schema = z.object({
-  questionId: z.string().cuid(),
+  questionId: z.string().min(1),
   content: z.string().min(1, 'EMPTY').max(80000), // raw HTML guard; plain text validated below
   isAnonymous: z.boolean(),
 });

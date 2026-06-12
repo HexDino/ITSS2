@@ -1,9 +1,11 @@
 'use client';
 
+import * as React from 'react';
 import { useEditor, EditorContent, type Editor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Placeholder from '@tiptap/extension-placeholder';
-import { Bold, Italic, Code, List, ListOrdered, Quote, Code2, Heading2 } from 'lucide-react';
+import Image from '@tiptap/extension-image';
+import { Bold, Italic, Code, List, ListOrdered, Quote, Code2, Heading2, Image as ImageIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
@@ -15,12 +17,19 @@ interface RichEditorProps {
 }
 
 export function RichEditor({ value, onChange, placeholder, className }: RichEditorProps) {
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
+
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
         heading: { levels: [2, 3] },
       }),
       Placeholder.configure({ placeholder: placeholder ?? '' }),
+      Image.configure({
+        HTMLAttributes: {
+          class: 'rounded-lg max-w-full my-2 border border-border shadow-sm inline-block',
+        },
+      }),
     ],
     content: value,
     immediatelyRender: false,
@@ -34,11 +43,48 @@ export function RichEditor({ value, onChange, placeholder, className }: RichEdit
     },
   });
 
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !editor) return;
+
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    if (!allowedTypes.includes(file.type)) {
+      alert('Vui lòng chỉ chọn tệp ảnh (JPEG, PNG, GIF, WEBP)');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const res = await fetch('/api/upload/image', {
+        method: 'POST',
+        body: formData,
+      });
+      const data = await res.json();
+      if (data.ok && data.url) {
+        editor.chain().focus().setImage({ src: data.url }).run();
+      } else {
+        alert('Tải ảnh lên thất bại. Vui lòng thử lại.');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Lỗi hệ thống khi tải ảnh.');
+    }
+  };
+
   if (!editor) return null;
 
   return (
     <div className={cn('rounded-md border border-input bg-background', className)}>
-      <Toolbar editor={editor} />
+      <input
+        type="file"
+        ref={fileInputRef}
+        onChange={handleImageUpload}
+        accept="image/*"
+        className="hidden"
+      />
+      <Toolbar editor={editor} onUploadClick={() => fileInputRef.current?.click()} />
       <div className="max-h-[420px] overflow-y-auto">
         <EditorContent editor={editor} />
       </div>
@@ -46,7 +92,7 @@ export function RichEditor({ value, onChange, placeholder, className }: RichEdit
   );
 }
 
-function Toolbar({ editor }: { editor: Editor }) {
+function Toolbar({ editor, onUploadClick }: { editor: Editor; onUploadClick: () => void }) {
   const Btn = ({
     onClick,
     active,
@@ -98,6 +144,10 @@ function Toolbar({ editor }: { editor: Editor }) {
       </Btn>
       <Btn label="Code block" active={editor.isActive('codeBlock')} onClick={() => editor.chain().focus().toggleCodeBlock().run()}>
         <Code2 className="h-3.5 w-3.5" />
+      </Btn>
+      <span className="mx-1 h-4 w-px bg-border" />
+      <Btn label="Đính kèm ảnh" onClick={onUploadClick}>
+        <ImageIcon className="h-3.5 w-3.5" />
       </Btn>
     </div>
   );

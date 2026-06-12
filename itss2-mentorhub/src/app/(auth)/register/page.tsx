@@ -4,6 +4,7 @@ import { useState, useTransition } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
+import { signIn } from 'next-auth/react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -36,7 +37,23 @@ export default function RegisterPage() {
         return;
       }
       toast({ title: t('registerSuccess') });
-      router.push('/login');
+
+      const loginRes = await signIn('credentials', {
+        email: form.email,
+        password: form.password,
+        redirect: false,
+      });
+
+      if (loginRes?.error) {
+        router.push('/login');
+      } else {
+        if (form.role === 'STUDENT') {
+          router.push('/setup-tags');
+        } else {
+          router.push('/channels');
+        }
+        router.refresh();
+      }
     });
   }
 

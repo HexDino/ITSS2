@@ -1,13 +1,14 @@
 import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
 import { prisma } from '@/lib/db';
+import { getActor } from '@/lib/actor';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { EmptyState } from '@/components/ui/empty-state';
 import { Pagination } from '@/components/ui/pagination';
 import { FilterChips } from '@/components/layout/filter-chips';
-import { Search, MessagesSquare } from 'lucide-react';
+import { Search, MessagesSquare, Sparkles } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
@@ -32,6 +33,29 @@ export default async function ChannelsPage({ searchParams }: PageProps) {
   const tCommon = await getTranslations('common');
   const sp = await searchParams;
   const db = prisma;
+
+  const actor = await getActor();
+  let personalizedChannels: any[] = [];
+  let studentSkills: string[] = [];
+
+  if (actor && actor.role === 'STUDENT') {
+    const profile = await db.studentProfile.findUnique({
+      where: { userId: actor.id },
+      select: { skills: true },
+    });
+    if (profile && profile.skills && profile.skills.length > 0) {
+      studentSkills = profile.skills;
+      personalizedChannels = await db.channel.findMany({
+        where: {
+          approved: true,
+          tags: { hasSome: profile.skills },
+        },
+        include: { _count: { select: { threads: true } } },
+        orderBy: [{ createdAt: 'desc' }],
+        take: 3,
+      });
+    }
+  }
 
   const where = {
     approved: true,
@@ -90,6 +114,56 @@ export default async function ChannelsPage({ searchParams }: PageProps) {
           />
         </div>
       </section>
+
+      {personalizedChannels.length > 0 && (
+        <section className="space-y-4 p-5 rounded-2xl border border-primary/20 bg-gradient-to-r from-primary/5 via-transparent to-primary/5 shadow-sm">
+          <div className="flex items-center gap-2">
+            <div className="p-1 bg-primary/10 rounded-lg text-primary">
+              <Sparkles className="h-4 w-4" />
+            </div>
+            <div className="space-y-0.5">
+              <h2 className="text-sm font-semibold tracking-tight text-foreground flex items-center gap-1.5">
+                Kênh thảo luận dành riêng cho bạn
+              </h2>
+              <p className="text-xs text-muted-foreground">
+                Gợi ý dựa trên các chủ đề bạn quan tâm: {studentSkills.map((s) => `#${s}`).join(', ')}
+              </p>
+            </div>
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {personalizedChannels.map((c) => (
+              <Link key={c.id} href={`/channels/${c.slug}`} className="group">
+                <Card className="h-full border-primary/15 transition-all duration-200 hover:border-primary/50 bg-card/40 backdrop-blur-sm shadow-sm hover:shadow-md">
+                  <CardHeader className="pb-2">
+                    <div className="flex items-center justify-between gap-2">
+                      <CardTitle className="text-sm font-bold group-hover:text-primary transition-colors truncate max-w-[150px]">{c.name}</CardTitle>
+                      <Badge variant="outline" className="text-[10px] py-0 border-primary/30 text-primary bg-primary/5">
+                        {t(`categories.${c.category}`)}
+                      </Badge>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="space-y-2.5">
+                    <p className="line-clamp-2 text-xs text-muted-foreground">{c.description}</p>
+                    <div className="flex flex-wrap gap-1">
+                      {c.tags.slice(0, 3).map((tag: string) => (
+                        <Badge key={tag} variant="tag" className="text-[10px] py-0 px-1.5">
+                          #{tag}
+                        </Badge>
+                      ))}
+                    </div>
+                    <p className="flex items-center gap-1 border-t border-border/40 pt-2 text-[10px] text-muted-foreground">
+                      <MessagesSquare className="h-3 w-3" />
+                      <span>
+                        <span className="font-semibold text-foreground">{c._count.threads}</span> {t('threads')}
+                      </span>
+                    </p>
+                  </CardContent>
+                </Card>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
 
       <section className="space-y-4">
         <div className="flex items-baseline justify-between">

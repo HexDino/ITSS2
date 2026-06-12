@@ -12,7 +12,7 @@ const prisma = new PrismaClient();
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
-async function upsertUser(email: string, name: string, role: 'STUDENT' | 'MENTOR' | 'ADMIN', password: string) {
+async function upsertUser(email: string, name: string, role: 'STUDENT' | 'MENTOR' | 'ADMIN' | 'EMPLOYER', password: string) {
   return prisma.user.upsert({
     where: { email },
     update: { name, role },
@@ -98,6 +98,27 @@ async function main() {
     },
   });
 
+  // ---- Doanh nghiệp (employer) --------------------------------------------
+  const employer = await upsertUser('hr@fpt.local', 'HR FPT', 'EMPLOYER', pwd);
+  const fpt = await prisma.company.upsert({
+    where: { slug: 'fpt-software' },
+    update: {},
+    create: {
+      name: 'FPT Software',
+      slug: 'fpt-software',
+      description: 'Công ty phần mềm hàng đầu Việt Nam.',
+      industry: 'IT Services',
+      location: 'Hà Nội',
+      size: 'LARGE',
+      verified: true,
+    },
+  });
+  await prisma.employerProfile.upsert({
+    where: { userId: employer.id },
+    update: { companyId: fpt.id, title: 'Tech Recruiter' },
+    create: { userId: employer.id, companyId: fpt.id, title: 'Tech Recruiter' },
+  });
+
   // Giữ tham chiếu admin để TS không cảnh báo unused
   void admin;
   void chi;
@@ -107,6 +128,7 @@ async function main() {
   void my;
   void phuc;
   void quynh;
+  void employer;
 
   // ---- Cố vấn (mentors) — phong phú, nhiều ngành ------------------------
   const mentorSeeds: MentorSeed[] = [
@@ -289,6 +311,7 @@ async function main() {
     'my@student.local': my.id,
     'phuc@student.local': phuc.id,
     'quynh@student.local': quynh.id,
+    'hr@fpt.local': employer.id,
     ...Object.fromEntries(Object.entries(mentorUsers).map(([email, u]) => [email, u.id])),
   };
 

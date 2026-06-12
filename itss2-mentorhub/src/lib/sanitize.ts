@@ -11,9 +11,10 @@ const ALLOWED_TAGS = [
   'blockquote',
   'a',
   'span',
+  'img',
 ];
 
-const ALLOWED_ATTR = ['href', 'target', 'rel', 'class'];
+const ALLOWED_ATTR = ['href', 'target', 'rel', 'class', 'src', 'alt', 'width', 'height', 'title'];
 
 export function sanitizeHtml(input: string): string {
   return DOMPurify.sanitize(input, {

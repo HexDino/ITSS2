@@ -119,7 +119,7 @@ export default async function ChannelDetailPage({
         </p>
       ) : null}
 
-      <div className="space-y-3">
+      <div className="space-y-5">
         {threads.length === 0 ? (
           <EmptyState
             icon={<MessagesSquare className="h-6 w-6" />}
@@ -130,7 +130,7 @@ export default async function ChannelDetailPage({
           threads.map((th) => {
             const displayName = th.isAnonymous ? null : th.author?.name;
             return (
-              <Link key={th.id} href={`/threads/${th.id}`}>
+              <Link key={th.id} href={`/threads/${th.id}`} className="block">
                 <Card className="transition-colors hover:border-primary/40">
                   <CardContent className="flex gap-4 py-4">
                     <Avatar className="h-9 w-9">
